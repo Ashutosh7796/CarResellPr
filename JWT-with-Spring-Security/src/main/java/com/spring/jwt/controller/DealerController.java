@@ -16,6 +16,7 @@ import java.util.List;
 @RequestMapping("/dealer")
 @RequiredArgsConstructor
 public class DealerController {
+
     private final DealerService dealerService;
 
     @PutMapping("/updateDealer/{userId}")

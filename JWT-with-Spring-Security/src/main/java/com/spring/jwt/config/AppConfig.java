@@ -27,9 +27,12 @@ import org.springframework.security.web.SecurityFilterChain;
 import org.springframework.security.web.authentication.UsernamePasswordAuthenticationFilter;
 import org.springframework.web.cors.CorsConfiguration;
 import org.springframework.web.cors.CorsConfigurationSource;
+import org.springframework.web.cors.UrlBasedCorsConfigurationSource;
 
+import java.util.ArrayList;
 import java.util.Arrays;
 import java.util.Collections;
+import java.util.List;
 
 @Configuration
 @EnableWebSecurity
@@ -104,6 +107,7 @@ public class AppConfig {
                         "/swagger-ui.html"
                 ).permitAll()
                 .requestMatchers("/cars/**").permitAll()
+                .requestMatchers("/bids/**").permitAll()
                 .requestMatchers("/BeadingCarController/**").permitAll()
                 .requestMatchers("/booking/**").hasAnyAuthority("USER", "ADMIN","DEALER")
                 .requestMatchers("/userProfilePhoto/**").permitAll()
@@ -140,21 +144,14 @@ public class AppConfig {
             @Override
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
-                config.setAllowedMethods(Collections.singletonList("*"));
+                config.setAllowedOrigins(Collections.singletonList("http://127.0.0.1:5173"));
+                config.setAllowedMethods(Arrays.asList("GET", "POST", "PUT", "DELETE", "OPTIONS"));
                 config.setAllowCredentials(true);
-                config.setAllowedHeaders(Collections.singletonList("*"));
-                config.setExposedHeaders(Arrays.asList("Authorization"));
-                config.setMaxAge(3600L);
+                config.setAllowedHeaders(Arrays.asList("Authorization", "Content-Type"));
+                config.setExposedHeaders(Collections.singletonList("Authorization"));
+
                 return config;
             }
         };
     }
-
-
 }
-
-
-
-
-

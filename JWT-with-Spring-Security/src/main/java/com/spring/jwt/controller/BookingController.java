@@ -22,7 +22,6 @@ import java.util.List;
 @RequestMapping("/confirmBooking")
 public class BookingController {
 
-    @Autowired
     private final BookingService bookingService;
 
     @PostMapping("/book")

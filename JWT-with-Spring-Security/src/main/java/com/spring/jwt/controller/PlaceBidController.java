@@ -9,6 +9,7 @@ import com.spring.jwt.exception.*;
 import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.messaging.simp.SimpMessagingTemplate;
 import org.springframework.web.bind.annotation.*;
 import org.springframework.web.server.ResponseStatusException;
 
@@ -21,15 +22,22 @@ public class PlaceBidController {
 
     private final PlacedBidService placedBidService;
 
+    private final SimpMessagingTemplate messagingTemplate;
+
         @PostMapping("/placeBid")
-    private ResponseEntity<?> placeBid(@RequestBody PlacedBidDTO placedBidDTO, @RequestParam Integer bidCarId) {
+         public ResponseEntity<?> placeBid(@RequestBody PlacedBidDTO placedBidDTO, @RequestParam Integer bidCarId) {
             try {
                 String result = placedBidService.placeBid(placedBidDTO, bidCarId);
-                return (ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success", result)));
+
+                List<PlacedBidDTO> topThreeBids = placedBidService.getTopThreeBidsrealtime(bidCarId);
+                String message = "Top three bids for car ID " + bidCarId + " retrieved successfully";
+                messagingTemplate.convertAndSend("/topic/bids", message); // Publish update via WebSocket
+                return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success", result));
             } catch (BidAmountLessException | BidForSelfAuctionException e) {
                 throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bid amount smaller than highest bid");
             }
         }
+
 
     @GetMapping("/user/{userId}")
     public ResponseEntity<ResponseAllPlacedBidDTO> getPlacedBidsByUserId(@PathVariable Integer userId) {
@@ -81,6 +89,18 @@ public class PlaceBidController {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseAllPlacedBidDTO("An error occurred: " + e.getMessage(), null, null));
         }
     }
-
+    @GetMapping("topBid/{bidCarId}")
+    public ResponseEntity<ResponseAllPlacedBidDTO> getTopThreeBidsrealtime(@PathVariable Integer bidCarId) {
+        try {
+            List<PlacedBidDTO> topThreeBids = placedBidService.getTopThreeBidsrealtime(bidCarId); // Get top three bids and notify WebSocket clients
+            return ResponseEntity.ok().build(); // Return response
+        } catch (BidNotFoundExceptions e) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND)
+                    .body(new ResponseAllPlacedBidDTO(e.getMessage(), null, null));
+        } catch (Exception e) {
+            return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR)
+                    .body(new ResponseAllPlacedBidDTO("An error occurred: " + e.getMessage(), null, null));
+        }
+    }
 
 }

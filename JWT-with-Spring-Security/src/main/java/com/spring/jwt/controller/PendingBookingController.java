@@ -24,12 +24,12 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/booking")
 public class PendingBookingController {
-    @Autowired
-    private CarRepo carRepo;
-    @Autowired
-    private DealerRepository dealerRepository;
-    @Autowired
-    private PendingBookingService pendingBookingService;
+
+    private final CarRepo carRepo;
+
+    private final DealerRepository dealerRepository;
+
+    private final PendingBookingService pendingBookingService;
 
     @PostMapping("/request")
     public ResponseEntity<?> requestCarBooking(@RequestBody PendingBookingDTO pendingBookingDTO) {

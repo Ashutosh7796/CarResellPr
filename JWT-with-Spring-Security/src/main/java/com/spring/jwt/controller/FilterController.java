@@ -23,15 +23,14 @@ import java.util.List;
 @RequiredArgsConstructor
 @RequestMapping("/cars")
 public class FilterController {
-    @Autowired
+
     private final FilterService filterService;
 
-    @Autowired
-    private UserService userService;
-    @Autowired
-    private ICarRegister iCarRegister;
+    private final UserService userService;
 
-    private PendingBookingService pendingBookingService;
+    private final ICarRegister iCarRegister;
+
+    private final PendingBookingService pendingBookingService;
 
 
     @GetMapping("/mainFilter/{pageNo}")
@@ -46,13 +45,9 @@ public class FilterController {
             @RequestParam(required = false) String fuelType,
             @PathVariable int pageNo) {
 
-
         Integer convertedYear = year != null && !year.isEmpty() ? Integer.valueOf(year) : null;
 
-
-
         FilterDto filterDto = new FilterDto(minPrice, maxPrice, area, brand, model, transmission, fuelType, convertedYear);
-
 
         try {
             List<CarDto> listOfCar = filterService.searchByFilter(filterDto, pageNo);

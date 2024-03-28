@@ -23,13 +23,13 @@ import java.util.stream.Collectors;
 @Service
 @RequiredArgsConstructor
 public class PlacedBidServiceImpl implements PlacedBidService {
-      private final PlacedBidRepo placedBidRepo;
+    private final PlacedBidRepo placedBidRepo;
 
-      private final  BidCarsRepo bidCarsRepo;
+    private final  BidCarsRepo bidCarsRepo;
 
-      private final ModelMapper modelMapper;
+    private final ModelMapper modelMapper;
 
-      private final UserRepository userRepository;
+    private final UserRepository userRepository;
 
 
     @Override
@@ -44,8 +44,8 @@ public class PlacedBidServiceImpl implements PlacedBidService {
             throw new BidAmountLessException();
         }
 
-          placedBid.setBidCarId(bidCarId);
-          placedBidRepo.save(placedBid);
+        placedBid.setBidCarId(bidCarId);
+        placedBidRepo.save(placedBid);
 
         return "Bid Placed Successfully";
     }
@@ -96,6 +96,11 @@ public class PlacedBidServiceImpl implements PlacedBidService {
         return topThreeBids.stream()
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
+    }
+
+    @Override
+    public List<PlacedBidDTO> getTopThreeBidsrealtime(Integer bidCarId) {
+        return null;
     }
 
     public PlacedBid convertToEntity(PlacedBidDTO placedBidDTO){

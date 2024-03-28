@@ -1,9 +1,9 @@
 package com.spring.jwt.Interfaces;
 
 import com.spring.jwt.dto.BeedingDtos.PlacedBidDTO;
-import com.spring.jwt.entity.PlacedBid;
 import com.spring.jwt.exception.BidAmountLessException;
 import com.spring.jwt.exception.BidForSelfAuctionException;
+import org.springframework.web.bind.annotation.PathVariable;
 
 import java.util.List;
 
@@ -18,6 +18,8 @@ public interface PlacedBidService {
     public PlacedBidDTO getById(Integer placedBidId);
 
     public  List<PlacedBidDTO> getTopThree(Integer bidCarId);
+
+    public List<PlacedBidDTO> getTopThreeBidsrealtime(@PathVariable Integer bidCarId);
 
 
 

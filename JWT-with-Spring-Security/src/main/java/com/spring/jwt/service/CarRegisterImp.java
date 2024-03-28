@@ -130,7 +130,6 @@ public class CarRegisterImp implements ICarRegister {
             carDto.setCarId(car.getId());
             listOfCarDto.add(carDto);
         }
-
         return listOfCarDto;
     }
 
