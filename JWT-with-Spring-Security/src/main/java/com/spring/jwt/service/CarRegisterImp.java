@@ -31,7 +31,6 @@ public class CarRegisterImp implements ICarRegister {
     @Autowired
     private CarRepo carRepo;
 
-
     @Autowired
     private DealerRepository dealerRepo;
     @Autowired
