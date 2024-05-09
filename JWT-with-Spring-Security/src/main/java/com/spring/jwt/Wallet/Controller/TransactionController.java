@@ -48,6 +48,9 @@ public class TransactionController {
         } catch (InsufficientBalanceException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("Error", e.getMessage()));
         }
+        catch (ResourceNotFoundException resourceNotFoundException) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("Error", resourceNotFoundException.getMessage()));
+        }
     }
 
     @GetMapping("/ByAccount/{accountId}")
