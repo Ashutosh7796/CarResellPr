@@ -32,7 +32,6 @@ CarController {
         try{
             String result = iCarRegister.AddCarDetails(carDto);
 
-
             return (ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success",result)));
 
         }catch (CarNotFoundException carNotFoundException){
@@ -61,11 +60,11 @@ CarController {
             ResponsenewCarDto responseAllCarDto = new ResponsenewCarDto("success", listOfCar, totalPages);
             return ResponseEntity.status(HttpStatus.OK).body(responseAllCarDto);
         } catch (CarNotFoundException carNotFoundException) {
-            ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("unsuccess");
+            ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("unsuccessful");
             responseAllCarDto.setException("Car not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseAllCarDto);
         } catch (PageNotFoundException pageNotFoundException) {
-            ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("unsuccess");
+            ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("unsuccessful");
             responseAllCarDto.setException("Page not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseAllCarDto);
         }

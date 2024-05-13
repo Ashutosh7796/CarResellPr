@@ -38,6 +38,9 @@ public class TransactionController {
         } catch (InsufficientBalanceException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("Error", e.getMessage()));
         }
+        catch (ResourceNotFoundException resourceNotFoundException) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("Error", resourceNotFoundException.getMessage()));
+        }
     }
 
     @PostMapping("/withdraw/{accountId}")
@@ -47,6 +50,9 @@ public class TransactionController {
             return ResponseEntity.status(HttpStatus.CREATED).body(new ResponseDto("Success", "Transaction processed successfully"));
         } catch (InsufficientBalanceException e) {
             return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("Error", e.getMessage()));
+        }
+        catch (ResourceNotFoundException resourceNotFoundException) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("Error", resourceNotFoundException.getMessage()));
         }
     }
 
