@@ -25,7 +25,6 @@ import java.util.Map;
 @RestController
 @RequestMapping("/uploadFile")
 @RequiredArgsConstructor
-@Tag(name = "DIGITAL_OCEAN_FOR_IMAGE_UPLOAD")
 public class DOUploadController {
     private final IDocument iDocument;
     @Value("${do.CDN.No}")
@@ -145,17 +144,5 @@ public class DOUploadController {
 
         }
     }
-    @GetMapping("/getAllPhotos")
-    private ResponseEntity<?> getAllPhotos() {
-        try {
-            Object documents =iDocument.getAllPhotos();
-            ResponceDto responceDto = new ResponceDto("success",documents);
-            return ResponseEntity.status(HttpStatus.OK).body(responceDto);
-        } catch (Exception e) {
-            System.err.println(e);
 
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponceDto("unsuccess", String.valueOf(e)));
-
-        }
-    }
 }
