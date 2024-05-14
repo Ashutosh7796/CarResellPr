@@ -55,12 +55,5 @@ public class DocumentImp implements IDocument {
 
     }
 
-    @Override
-    public Object getAllPhotos() {
-        List<Document> document = documentRepo.findAll();
-        if(document.isEmpty()){
-            throw new RuntimeException("document not found by user id");
-        }
-        return document;
-    }
+
 }

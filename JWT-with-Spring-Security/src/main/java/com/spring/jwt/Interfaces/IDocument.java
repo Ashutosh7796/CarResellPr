@@ -13,5 +13,4 @@ public interface IDocument {
 
     List<Document> getByUserId(Integer userId);
 
-    Object getAllPhotos();
 }
