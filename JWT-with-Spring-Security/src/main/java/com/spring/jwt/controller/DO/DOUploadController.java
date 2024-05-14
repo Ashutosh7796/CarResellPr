@@ -132,10 +132,23 @@ public class DOUploadController {
         }
     }
 
-    @GetMapping("getByUserId")
+    @GetMapping("/getByUserId")
         private ResponseEntity<?> getByUserId(@RequestParam Integer userId) {
         try {
             Object documents =iDocument.getByUserId(userId);
+            ResponceDto responceDto = new ResponceDto("success",documents);
+            return ResponseEntity.status(HttpStatus.OK).body(responceDto);
+        } catch (Exception e) {
+            System.err.println(e);
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponceDto("unsuccess", String.valueOf(e)));
+
+        }
+    }
+    @GetMapping("/getAllPhotos")
+    private ResponseEntity<?> getAllPhotos() {
+        try {
+            Object documents =iDocument.getAllPhotos();
             ResponceDto responceDto = new ResponceDto("success",documents);
             return ResponseEntity.status(HttpStatus.OK).body(responceDto);
         } catch (Exception e) {

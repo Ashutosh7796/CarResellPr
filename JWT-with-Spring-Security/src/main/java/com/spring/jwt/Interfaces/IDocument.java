@@ -7,9 +7,11 @@ import com.spring.jwt.entity.Document;
 import java.util.List;
 
 public interface IDocument {
-    public String addDocument(DocumentDto documentDto);
+    String addDocument(DocumentDto documentDto);
 
-    public List<Document> getAllDocument(Integer userId, String DocumentType);
+    List<Document> getAllDocument(Integer userId, String DocumentType);
 
-    public List<Document> getByUserId(Integer userId);
+    List<Document> getByUserId(Integer userId);
+
+    Object getAllPhotos();
 }
