@@ -15,6 +15,5 @@ public class TransactionDTO {
     private String status;
     private LocalDateTime lastUpdateTime;
     private Integer accountId;
-    private Integer userId;
-    private WalletAccountDTO account;
+//    private WalletAccountDTO account;
 }

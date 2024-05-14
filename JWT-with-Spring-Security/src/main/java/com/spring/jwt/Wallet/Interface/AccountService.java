@@ -11,4 +11,6 @@ public interface AccountService {
     WalletAccountDTO createAccount(WalletAccountDTO createAccountDTO);
     WalletAccountDTO updateAccount(Integer accountId, WalletAccountDTO accountDTO);
     void deleteAccount(Integer accountId);
+
+    WalletAccountDTO getByUserId (Integer UserId);
 }

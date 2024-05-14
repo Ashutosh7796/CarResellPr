@@ -39,7 +39,7 @@ public class Transaction {
     private Integer otherAccountNo;
 
     @ManyToOne
-    @JoinColumn(name = "accountId", nullable = false)
+    @JoinColumn(name = "accountId", nullable = false) // Update this line
     private WalletAccount account;
 
     public void setUser() {
