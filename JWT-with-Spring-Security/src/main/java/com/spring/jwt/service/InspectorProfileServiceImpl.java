@@ -4,14 +4,22 @@ import com.spring.jwt.Interfaces.InspectorProfileService;
 import com.spring.jwt.dto.InspectorProfileDto;
 import com.spring.jwt.entity.InspectorProfile;
 import com.spring.jwt.entity.User;
+import com.spring.jwt.exception.PageNotFoundException;
 import com.spring.jwt.exception.UserNotFoundExceptions;
 import com.spring.jwt.repository.InspectorProfileRepo;
 import com.spring.jwt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
+import org.springframework.data.domain.PageRequest;
+import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
 
+import java.util.ArrayList;
+import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 @RequiredArgsConstructor
@@ -109,12 +117,34 @@ public class InspectorProfileServiceImpl implements InspectorProfileService {
         return inspectorProfileDto;
     }
 
+    @Override
+    public Page<InspectorProfileDto> getAllProfiles(Integer pageNo, Integer pageSize) {
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<InspectorProfile> allProfiles = inspectorProfileRepo.findAll(pageable);
+
+        if (allProfiles.isEmpty()) {
+            throw new PageNotFoundException("Page Not Found");
+        }
+
+        List<InspectorProfileDto> profileDtoList = allProfiles.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(profileDtoList, pageable, allProfiles.getTotalElements());
+    }
+
+
     private InspectorProfileDto convertToDto(InspectorProfile inspectorProfile) {
         InspectorProfileDto dto = new InspectorProfileDto();
         dto.setAddress(inspectorProfile.getAddress());
         dto.setCity(inspectorProfile.getCity());
         dto.setFirstName(inspectorProfile.getFirstName());
         dto.setLastName(inspectorProfile.getLastName());
+        User user = inspectorProfile.getUser();
+        if (user != null) {
+            dto.setEmail(user.getEmail());
+            dto.setMobileNo(user.getMobileNo());
+        }
         return dto;
     }
 }

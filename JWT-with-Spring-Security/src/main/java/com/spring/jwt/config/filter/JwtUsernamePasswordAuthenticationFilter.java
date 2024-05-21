@@ -65,7 +65,6 @@ public class JwtUsernamePasswordAuthenticationFilter extends AbstractAuthenticat
                 .map(GrantedAuthority::getAuthority)
                 .collect(Collectors.toList());
 
-        // Generate and return the JWT token
         String accessToken = jwtService.generateToken(userDetailsCustom);
         String json = HelperUtils.JSON_WRITER.writeValueAsString(accessToken);
         response.setContentType("application/json; charset=UTF-8");
