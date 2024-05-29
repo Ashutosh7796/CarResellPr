@@ -14,7 +14,7 @@ public class SmsEntity {
     private Integer smsId;
 
     @Column(name = "mobileNo")
-    private Long mobileNo;
+    private String mobileNo;
 
     @Column(name = "otp")
     private String otp;

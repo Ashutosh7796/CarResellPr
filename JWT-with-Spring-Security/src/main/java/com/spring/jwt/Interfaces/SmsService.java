@@ -11,4 +11,8 @@ public interface SmsService {
 
     boolean verifyOtp(SmsDto smsDto);
 
+    public boolean canResendOtp(String mobileNo);
+
+    public void removePreviousOtp(String mobileNo);
+
 }

@@ -19,13 +19,14 @@ import java.nio.charset.StandardCharsets;
 import java.time.LocalDateTime;
 import java.time.temporal.ChronoUnit;
 import java.util.HashMap;
+import java.util.List;
 import java.util.Map;
-
 @Service
 public class SmsServiceImpl implements SmsService {
 
     private static final Logger logger = LoggerFactory.getLogger(SmsServiceImpl.class);
-    private static final Map<Long, String> otpCache = new HashMap<>();
+    private static final Map<String, String> otpCache = new HashMap<>();
+    private static final Map<String, LocalDateTime> otpTimeCache = new HashMap<>();
 
     @Autowired
     private SmsRepo smsRepo;
@@ -38,7 +39,6 @@ public class SmsServiceImpl implements SmsService {
             String route = "p";
 
             message = URLEncoder.encode(message, StandardCharsets.UTF_8);
-
 
             String myUrl = "https://www.fast2sms.com/dev/bulkV2?authorization=" + apiKey
                     + "&sender_id=" + sendId + "&message=" + message + "&language=" + language
@@ -80,6 +80,7 @@ public class SmsServiceImpl implements SmsService {
             smsEntity.setCreatedAt(LocalDateTime.now());
             smsRepo.save(smsEntity);
             otpCache.put(smsEntity.getMobileNo(), hashedOtp);
+            otpTimeCache.put(smsEntity.getMobileNo(), LocalDateTime.now());
         } catch (Exception e) {
             logger.error("Error while saving OTP: ", e);
         }
@@ -99,10 +100,12 @@ public class SmsServiceImpl implements SmsService {
                         smsEntity.setStatus("Verified");
                         smsRepo.save(smsEntity);
                         otpCache.remove(smsDto.getMobileNo());
+                        otpTimeCache.remove(smsDto.getMobileNo());
                         return true;
                     } else {
                         smsRepo.delete(smsEntity);
                         otpCache.remove(smsDto.getMobileNo());
+                        otpTimeCache.remove(smsDto.getMobileNo());
                     }
                 }
             } catch (Exception e) {
@@ -112,4 +115,23 @@ public class SmsServiceImpl implements SmsService {
         return false;
     }
 
+    public boolean canResendOtp(String mobileNo) {
+        LocalDateTime lastSentTime = otpTimeCache.get(mobileNo);
+        if (lastSentTime == null) {
+            return true;
+        }
+        return ChronoUnit.MINUTES.between(lastSentTime, LocalDateTime.now()) > 3;
+    }
+
+    @Override
+    public void removePreviousOtp(String mobileNo) {
+        try {
+            List<SmsEntity> smsEntities = smsRepo.findByMobileNo(mobileNo);
+            smsRepo.deleteAll(smsEntities);
+            otpCache.remove(mobileNo);
+            otpTimeCache.remove(mobileNo);
+        } catch (Exception e) {
+            logger.error("Error while removing previous OTPs: ", e);
+        }
+    }
 }

@@ -34,23 +34,30 @@ public class AccountController {
     private final UserService userService;
 
     @PostMapping("/register")
-    public ResponseEntity<BaseResponseDTO> register(@RequestBody RegisterDto registerDto){
-
+    public ResponseEntity<BaseResponseDTO> register(@RequestBody RegisterDto registerDto) {
         try {
-           BaseResponseDTO response= userService.registerAccount(registerDto);
-            return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDTO("Successful",response.getMessage()));
-        }catch (UserAlreadyExistException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new BaseResponseDTO("Unsuccessful","User already exists"));
-        }catch (BaseException e){
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new BaseResponseDTO("Unsuccessful","Invalid role"));
-        }catch (MobileNumberNotVerifiedException e) {
-            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new BaseResponseDTO("Unsuccessful",e.getMessage()));
+            BaseResponseDTO response = userService.registerAccount(registerDto);
+            return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDTO("Successful", response.getMessage()));
+        } catch (UserAlreadyExistException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new BaseResponseDTO("Unsuccessful", "User already exists"));
+        } catch (BaseException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new BaseResponseDTO("Unsuccessful", "Invalid role"));
+        } catch (MobileNumberNotVerifiedException e) {
+            return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new BaseResponseDTO("Unsuccessful", e.getMessage()));
         }
     }
 
     @PostMapping("/send")
     public String sendMessage(@RequestBody SmsDto smsDto) {
         logger.info("Program Started....");
+
+        String mobileNo = smsDto.getMobileNo();
+        if (!smsService.canResendOtp(mobileNo)) {
+            return "Please wait 3 minutes before requesting a new OTP.";
+        }
+
+        // Remove the previous OTP before sending a new one
+        smsService.removePreviousOtp(mobileNo);
 
         String otp = OtpUtil.generateOtp(6);
         logger.info("Generated OTP: {}", otp);
@@ -61,7 +68,7 @@ public class AccountController {
         smsService.sendSms(otp, number, apiKey);
 
         SmsEntity smsEntity = new SmsEntity();
-        smsEntity.setMobileNo(smsDto.getMobileNo());
+        smsEntity.setMobileNo(mobileNo);
         smsEntity.setOtp(otp);
         smsEntity.setStatus("Pending");
         smsService.saveOtp(smsEntity);
@@ -72,6 +79,6 @@ public class AccountController {
     @PostMapping("/verify")
     public String verifyOtp(@RequestBody SmsDto smsDto) {
         boolean isValid = smsService.verifyOtp(smsDto);
-        return isValid ? "OTP Verified Successfully" : "Invalid OTP Please Enter the valid OTP";
+        return isValid ? "OTP Verified Successfully" : "Invalid OTP. Please enter the valid OTP.";
     }
 }

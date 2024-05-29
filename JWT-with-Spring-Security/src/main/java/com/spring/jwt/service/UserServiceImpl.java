@@ -65,7 +65,7 @@ public class UserServiceImpl implements UserService {
     }
 
     private User insertUser(RegisterDto registerDto) {
-        SmsEntity searchMobileNo = smsRepo.findByMobileNo(registerDto.getMobileNo());
+        SmsEntity searchMobileNo = smsRepo.findUserWithMobileNo(registerDto.getMobileNo());
 
         User user = new User();
 
