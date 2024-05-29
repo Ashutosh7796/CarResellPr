@@ -60,14 +60,13 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/delete/{id}" ,method = RequestMethod.DELETE)
-    public ResponseEntity<?> removeUser(@PathVariable int id){
-
+    @DeleteMapping(value = "/delete")
+    public ResponseEntity<?> removeUser(@RequestParam("userId") int id) {
         try {
-            BaseResponseDTO result= userService.removeUser(id);
-            return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDTO("Successful",result.getMessage()));
-        }catch (UserNotFoundExceptions exception){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BaseResponseDTO("Unsuccessful","user not found"));
+            BaseResponseDTO result = userService.removeUser(id);
+            return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDTO("Successful", result.getMessage()));
+        } catch (UserNotFoundExceptions exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BaseResponseDTO("Unsuccessful", "User not found"));
         }
     }
 

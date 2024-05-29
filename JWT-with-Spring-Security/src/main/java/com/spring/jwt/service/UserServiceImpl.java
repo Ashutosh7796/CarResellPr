@@ -8,6 +8,7 @@ import com.spring.jwt.dto.UserProfileDto;
 import com.spring.jwt.entity.*;
 import com.spring.jwt.exception.*;
 import com.spring.jwt.repository.RoleRepository;
+import com.spring.jwt.repository.SmsRepo;
 import com.spring.jwt.repository.UserProfileRepository;
 import com.spring.jwt.repository.UserRepository;
 import com.spring.jwt.utils.BaseResponseDTO;
@@ -37,6 +38,9 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
+    @Autowired
+    private SmsRepo smsRepo;
+
     @Override
     public BaseResponseDTO registerAccount(RegisterDto registerDto) {
         BaseResponseDTO response = new BaseResponseDTO();
@@ -61,7 +65,14 @@ public class UserServiceImpl implements UserService {
     }
 
     private User insertUser(RegisterDto registerDto) {
+        SmsEntity searchMobileNo = smsRepo.findByMobileNo(registerDto.getMobileNo());
+
         User user = new User();
+
+        if (searchMobileNo != null && !Objects.equals(searchMobileNo.getStatus(), "Pending"));
+            else {
+            throw new MobileNumberNotVerifiedException("Mobile Number is Not Verified Please verify To Continue");
+        }
         user.setEmail(registerDto.getEmail());
         user.setMobileNo(registerDto.getMobileNo());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
