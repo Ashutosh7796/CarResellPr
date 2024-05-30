@@ -25,7 +25,7 @@ public interface CarRepo extends JpaRepository<Car, Integer>, JpaSpecificationEx
 //    @Query("SELECT c FROM Car c WHERE dealerId = :dealerId and carStatus = 'pending'")
 //    @Query("SELECT c FROM Car c WHERE c.dealerId= :dealerId AND c.carStatus= :carStatus")
 
-    @Query(value = "SELECT * FROM car c WHERE c.dealer_id = :dealerId AND c.car_status = :carStatus", nativeQuery = true)
+    @Query(value = "SELECT * FROM car c WHERE c.dealer_id = :dealerId AND c.car_status = :carStatus ORDER BY c.date DESC", nativeQuery = true)
     List<Car> findByDealerIdAndCarStatus(@Param("dealerId") Integer dealerId, @Param("carStatus") String carStatus);
 
     @Query("SELECT c FROM Car c WHERE carStatus='active' OR carStatus='pending'")

@@ -231,34 +231,28 @@ public class CarRegisterImp implements ICarRegister {
 
         List<Car> listOfCar = carRepo.findByDealerIdAndCarStatus(dealerId, statusString);
 
-        if ((pageNo * 10) > listOfCar.size() - 1) {
-            throw new PageNotFoundException("page not found");
-        }
-        if (listOfCar.size() <= 0) {
+        if (listOfCar.isEmpty()) {
             throw new CarNotFoundException("car not found", HttpStatus.NOT_FOUND);
         }
 
+        int pageSize = 10;
+        int pageStart = pageNo * pageSize;
+        int pageEnd = Math.min(pageStart + pageSize, listOfCar.size());
+
+        if (pageStart >= listOfCar.size()) {
+            throw new PageNotFoundException("page not found");
+        }
+
         List<CarDto> listOfCarDto = new ArrayList<>();
-
-        int pageStart = pageNo * 10;
-        int pageEnd = pageStart + 10;
-        int diff = (listOfCar.size()) - pageStart;
-        for (int counter = pageStart, i = 1; counter < pageEnd; counter++, i++) {
-            if (pageStart > listOfCar.size()) {
-                break;
-            }
-
-            CarDto carDto = new CarDto(listOfCar.get(counter));
-            carDto.setCarId(listOfCar.get(counter).getId());
+        for (int i = pageStart; i < pageEnd; i++) {
+            Car car = listOfCar.get(i);
+            CarDto carDto = new CarDto(car);
+            carDto.setCarId(car.getId());
             listOfCarDto.add(carDto);
-            if (diff == i) {
-                break;
-            }
         }
 
         return listOfCarDto;
     }
-
     private boolean dealerExists(int dealerId) {
         return dealerRepo.existsById(dealerId);
     }

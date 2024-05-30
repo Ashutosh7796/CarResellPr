@@ -65,14 +65,14 @@ public class UserServiceImpl implements UserService {
     }
 
     private User insertUser(RegisterDto registerDto) {
-        SmsEntity searchMobileNo = smsRepo.findUserWithMobileNo(registerDto.getMobileNo());
+//        SmsEntity searchMobileNo = smsRepo.findUserWithMobileNo(registerDto.getMobileNo());
 
         User user = new User();
 
-        if (searchMobileNo != null && !Objects.equals(searchMobileNo.getStatus(), "Pending"));
-            else {
-            throw new MobileNumberNotVerifiedException("Mobile Number is Not Verified Please verify To Continue");
-        }
+//        if (searchMobileNo != null && !Objects.equals(searchMobileNo.getStatus(), "Pending"));
+//            else {
+//            throw new MobileNumberNotVerifiedException("Mobile Number is Not Verified Please verify To Continue");
+//        }
         user.setEmail(registerDto.getEmail());
         user.setMobileNo(registerDto.getMobileNo());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));

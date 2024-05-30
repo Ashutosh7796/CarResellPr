@@ -1,11 +1,11 @@
 package com.spring.jwt.entity;
 
-
 import com.spring.jwt.Wallet.Entity.WalletAccount;
 import com.spring.jwt.dto.DealerDto;
 import com.spring.jwt.dto.RegisterDto;
 import com.spring.jwt.dto.UserProfileDto;
 import jakarta.persistence.*;
+import jakarta.validation.constraints.Pattern;
 import lombok.AllArgsConstructor;
 import lombok.Data;
 import lombok.NoArgsConstructor;
@@ -29,6 +29,7 @@ public class User {
     private String email;
 
     @Column(name = "mobile_no")
+    @Pattern(regexp="^[0-9]+$", message="Mobile number should contain only numbers")
     private String mobileNo;
 
     @Column(name = "password", nullable = false, length = 250)
