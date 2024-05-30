@@ -253,6 +253,7 @@ public class CarRegisterImp implements ICarRegister {
 
         return listOfCarDto;
     }
+
     private boolean dealerExists(int dealerId) {
         return dealerRepo.existsById(dealerId);
     }
