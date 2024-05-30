@@ -305,7 +305,7 @@ public class UserServiceImpl implements UserService {
 
             String resetLink = resetPasswordLink;
 
-            String subject = "Checking: confirmation";
+            String subject = "Reset Password";
 
             String from = "b.aniket1414@gmail.com";
 
