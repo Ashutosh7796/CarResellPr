@@ -57,7 +57,6 @@ public class InspectorProfileController {
     } catch (Exception e) {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("unSuccess", e.getMessage()));
     }
-
 }
 }
 
