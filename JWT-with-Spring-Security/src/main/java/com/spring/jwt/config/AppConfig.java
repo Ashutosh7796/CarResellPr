@@ -89,6 +89,7 @@ public class AppConfig {
                 .csrf().disable()
                 .formLogin().disable()
                 .authorizeHttpRequests()
+
                 .requestMatchers("/account/**").permitAll()
                 .requestMatchers(
                         "/api/v1/auth/**",

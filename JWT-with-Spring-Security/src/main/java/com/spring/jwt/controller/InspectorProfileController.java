@@ -1,14 +1,20 @@
 package com.spring.jwt.controller;
 
 import com.spring.jwt.Interfaces.InspectorProfileService;
+import com.spring.jwt.dto.AllInspectorProfilesDTO;
 import com.spring.jwt.dto.InspectorProfileDto;
 import com.spring.jwt.dto.ResponseDto;
 import com.spring.jwt.dto.SingleProfileDto;
+import com.spring.jwt.exception.PageNotFoundException;
 import com.spring.jwt.exception.UserNotFoundExceptions;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+
+import java.awt.print.Pageable;
+import java.util.List;
 
 @RestController
 @RequestMapping("/ispProfile")
@@ -58,6 +64,23 @@ public class InspectorProfileController {
         return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("unSuccess", e.getMessage()));
     }
 }
+
+    @GetMapping("/GetAllInspProfiles")
+    public ResponseEntity<?> getAllInspProfiles(@RequestParam(value = "pageNo") int pageNo,
+                                                @RequestParam(value = "pageSize", defaultValue = "10") int pageSize) {
+        try {
+            Page<InspectorProfileDto> allProfilesPage = inspectorProfileService.getAllProfiles(pageNo, pageSize);
+            AllInspectorProfilesDTO profilesDTO = new AllInspectorProfilesDTO("Success");
+            profilesDTO.setTotalPages(allProfilesPage.getTotalPages());
+            profilesDTO.setList(allProfilesPage.getContent());
+            return ResponseEntity.status(HttpStatus.OK).body(profilesDTO);
+        } catch (PageNotFoundException e) {
+            AllInspectorProfilesDTO profile = new AllInspectorProfilesDTO("Unsuccessful");
+            profile.setException(e.getMessage());
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(profile);
+        }
+    }
+
 }
 
 
