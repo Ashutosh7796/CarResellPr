@@ -57,7 +57,10 @@ CarController {
         try {
             List<CarDto> listOfCar = iCarRegister.getAllCarsWithPages(pageNo, pageSize);
             int totalPages = getTotalPages(pageSize);
-            ResponsenewCarDto responseAllCarDto = new ResponsenewCarDto("success", listOfCar, totalPages);
+
+            ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("success");
+            responseAllCarDto.setList(listOfCar);
+
             return ResponseEntity.status(HttpStatus.OK).body(responseAllCarDto);
         } catch (CarNotFoundException carNotFoundException) {
             ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("unsuccessful");
@@ -71,9 +74,10 @@ CarController {
     }
 
     private int getTotalPages(int pageSize) {
-        int totalCars = carRepo.getPendingAndActivateCarOrderedByCreatedAtDesc().size();
+        int totalCars = carRepo.getPendingAndActivateCarOrderedByIdDesc().size();
         return (int) Math.ceil((double) totalCars / pageSize);
     }
+
 
 
     @DeleteMapping("/removeCar")

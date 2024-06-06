@@ -13,4 +13,9 @@ public interface IDocument {
 
     List<Document> getByUserId(Integer userId);
 
+    Object getByCarID(Integer carId);
+
+    Object delete(Integer carId);
+
+    Object getCarIdType(Integer carId, String docType);
 }

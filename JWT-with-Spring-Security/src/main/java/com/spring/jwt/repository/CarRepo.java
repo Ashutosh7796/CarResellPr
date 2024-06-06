@@ -2,6 +2,7 @@ package com.spring.jwt.repository;
 
 
 import com.spring.jwt.entity.Car;
+import com.spring.jwt.entity.Status;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -25,16 +26,18 @@ public interface CarRepo extends JpaRepository<Car, Integer>, JpaSpecificationEx
 //    @Query("SELECT c FROM Car c WHERE dealerId = :dealerId and carStatus = 'pending'")
 //    @Query("SELECT c FROM Car c WHERE c.dealerId= :dealerId AND c.carStatus= :carStatus")
 
-    @Query(value = "SELECT * FROM car c WHERE c.dealer_id = :dealerId AND c.car_status = :carStatus ORDER BY c.date DESC", nativeQuery = true)
-    List<Car> findByDealerIdAndCarStatus(@Param("dealerId") Integer dealerId, @Param("carStatus") String carStatus);
+    @Query("SELECT c FROM Car c WHERE c.dealerId = :dealerId AND c.carStatus = :status ORDER BY c.id DESC")
+    List<Car> findByDealerIdAndCarStatus(@Param("dealerId") int dealerId, @Param("status") Status status);
 
-    @Query("SELECT c FROM Car c WHERE carStatus='active' OR carStatus='pending'")
+
+    @Query("SELECT c FROM Car c WHERE carStatus='Active' OR carStatus='Pending'")
     public List<Car> getPendingAndActivateCar();
 
     public Optional<List<Car>> getByDealerId(Integer dealerId);
 
-    @Query("SELECT c FROM Car c WHERE c.carStatus = 'pending' OR c.carStatus = 'active' ORDER BY c.id DESC")
-    List<Car> getPendingAndActivateCarOrderedByCreatedAtDesc();
+    @Query("SELECT c FROM Car c WHERE c.carStatus IN ('PENDING', 'ACTIVE') ORDER BY c.id DESC")
+    List<Car> getPendingAndActivateCarOrderedByIdDesc();
+
 }
 
 

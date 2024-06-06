@@ -31,14 +31,14 @@ public class DOUploadController {
     private String CDNNo;
     private final String uploadDir = "uploads";
     private DOService doService = new DOService();
-//    private final String NODEJS_SERVER_URL = "https://digitaloceannodeservice.up.railway.app" ; // Change this to your Node.js server's URL
+    //    private final String NODEJS_SERVER_URL = "https://digitaloceannodeservice.up.railway.app" ; // Change this to your Node.js server's URL
     private final String NODEJS_SERVER_URL = "https://digitaloceannodeimageservice-production.up.railway.app" ; // Change this to your Node.js server's URL
 
     private final RestTemplate restTemplate = new RestTemplate();
 
 
     @PostMapping("/add")
-        public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file, @RequestParam String documentType, @RequestParam Integer userId) throws InvalidKeyException, NoSuchAlgorithmException {
+    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file, @RequestParam String documentType, @RequestParam Integer userId,@RequestParam Integer carId) throws InvalidKeyException, NoSuchAlgorithmException {
         try {
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
             Path filePath = Paths.get(uploadDir, fileName);
@@ -90,7 +90,7 @@ public class DOUploadController {
 //                System.out.println(jsonArray.toString());
                 DocumentDto documentDto = new DocumentDto();
                 documentDto.setUserId(userId);
-
+                documentDto.setCarId(carId);
                 documentDto.setDocumentType(documentType);
 
                 documentDto.setDocumentLink(CDNNo + "/" + response.getBody());
@@ -121,7 +121,7 @@ public class DOUploadController {
     private ResponseEntity<?> getDocumentByUserIdAndDocId(@RequestParam Integer userId, @RequestParam String DocumentType) {
         try {
             Object documents = iDocument.getAllDocument(userId, DocumentType);
-          ResponceDto responceDto = new ResponceDto("success",documents);
+            ResponceDto responceDto = new ResponceDto("success",documents);
             return ResponseEntity.status(HttpStatus.OK).body(responceDto);
         } catch (Exception e) {
             System.err.println(e);
@@ -132,7 +132,7 @@ public class DOUploadController {
     }
 
     @GetMapping("/getByUserId")
-        private ResponseEntity<?> getByUserId(@RequestParam Integer userId) {
+    private ResponseEntity<?> getByUserId(@RequestParam Integer userId) {
         try {
             Object documents =iDocument.getByUserId(userId);
             ResponceDto responceDto = new ResponceDto("success",documents);
@@ -144,5 +144,43 @@ public class DOUploadController {
 
         }
     }
+    @DeleteMapping("/delete")
+    private ResponseEntity<?> deleteCar(@RequestParam Integer carId) {
+        try {
+            Object documents =iDocument.delete(carId);
 
+            return ResponseEntity.status(HttpStatus.OK).body(documents);
+        } catch (Exception e) {
+            System.err.println(e);
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponceDto("unsuccess", String.valueOf(e)));
+
+        }
+    }
+    @GetMapping("/getByCarID")
+    private ResponseEntity<?> getByCarID(@RequestParam Integer carId) {
+        try {
+            Object documents =iDocument.getByCarID(carId);
+            ResponceDto responceDto = new ResponceDto("success",documents);
+            return ResponseEntity.status(HttpStatus.OK).body(responceDto);
+        } catch (Exception e) {
+            System.err.println(e);
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponceDto("unsuccess", String.valueOf(e)));
+
+        }
+    }
+    @GetMapping("/getCarIdType")
+    private ResponseEntity<?> getCarIdType(@RequestParam Integer carId,@RequestParam String docType) {
+        try {
+            Object documents =iDocument.getCarIdType(carId,docType);
+            ResponceDto responceDto = new ResponceDto("success",documents);
+            return ResponseEntity.status(HttpStatus.OK).body(responceDto);
+        } catch (Exception e) {
+            System.err.println(e);
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponceDto("unsuccess", String.valueOf(e)));
+
+        }
+    }
 }

@@ -95,27 +95,25 @@ public class FilterController {
 //        return ResponseEntity.ok(cars.get());*
     }
     @GetMapping("/getAllCars")
-    public ResponseEntity<ResponseAllCarDto> getAllCars(@RequestParam int pageNo){
-        try
-        {
-            List<CarDto> listOfCar= filterService.getAllCarsWithPages(pageNo);
+    public ResponseEntity<?> getAllCars(@RequestParam int pageNo, @RequestParam(defaultValue = "10") int pageSize) {
+        try {
+            List<CarDto> listOfCar = iCarRegister.getAllCarsWithPages(pageNo, pageSize);
 
             ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("success");
             responseAllCarDto.setList(listOfCar);
+
             return ResponseEntity.status(HttpStatus.OK).body(responseAllCarDto);
-        }
-        catch (CarNotFoundException carNotFoundException){
-//            List<CarDto> emptyList;
-            ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("unsuccess");
-            responseAllCarDto.setException(String.valueOf(carNotFoundException));
+        } catch (CarNotFoundException carNotFoundException) {
+            ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("unsuccessful");
+            responseAllCarDto.setException("Car not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseAllCarDto);
-        }
-        catch (PageNotFoundException pageNotFoundException){
-            ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("unsuccess");
-            responseAllCarDto.setException(String.valueOf(pageNotFoundException));
+        } catch (PageNotFoundException pageNotFoundException) {
+            ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("unsuccessful");
+            responseAllCarDto.setException("Page not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseAllCarDto);
         }
     }
+
     @PostMapping("/forgot-password")
     public ResponseEntity<ResponseDto> forgotPass(HttpServletRequest request) throws UserNotFoundExceptions {
         try {
