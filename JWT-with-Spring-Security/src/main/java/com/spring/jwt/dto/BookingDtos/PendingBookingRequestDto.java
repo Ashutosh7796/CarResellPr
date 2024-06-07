@@ -15,8 +15,6 @@ public class PendingBookingRequestDto {
 
     private String area;
 
-    private String bodyType;
-
     private String brand;
 
     private Boolean carInsurance;
@@ -47,13 +45,16 @@ public class PendingBookingRequestDto {
 
     private String registration;
 
-    private String safetyDescription;
 
     private String transmission;
 
-    private String tyre;
-
     private int year;
+
+    private String title;
+
+    private String variant;
+
+    private String carInsuranceDate;
 
     private DealerDetails dealerDetails;
 
@@ -68,7 +69,6 @@ public class PendingBookingRequestDto {
         this.musicFeature = car.getMusicFeature();
         this.date=car.getDate();
         this.area = car.getArea();
-        this.bodyType =car.getBodyType();
         this.brand = car.getBrand();
         this.carInsurance = car.getCarInsurance();
         this.carStatus = car.getCarStatus();
@@ -78,17 +78,17 @@ public class PendingBookingRequestDto {
         this.fuelType =car.getFuelType();
         this.kmDriven = car.getKmDriven();
         this.model=car.getModel();
-        this.noOfWheels = car.getNoOfWheels();
         this.ownerSerial = car.getOwnerSerial();
         this.powerWindowFeature = car.getPowerWindowFeature();
         this.price = car.getPrice();
         this.rearParkingCameraFeature = car.getRearParkingCameraFeature();
         this.registration = car.getRegistration();
-        this.safetyDescription = car.getSafetyDescription();
         this.transmission = car.getTransmission();
-        this.tyre = car.getTyre();
         this.year = car.getYear();
         this.dealer_id=car.getDealerId();
+        this.title = car.getTitle();
+        this.variant = car.getVariant();
+        this.carInsuranceDate = car.getCarInsuranceDate();
 
     }
 }
