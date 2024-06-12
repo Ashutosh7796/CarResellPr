@@ -32,7 +32,7 @@ public class Car {
     @Column(name = "area", length = 45)
     private String area;
 
-    @Column(name = "`variant", length = 45)
+    @Column(name = "variant", length = 45)
     private String variant;
 
     @Column(name = "brand", nullable = false, length = 45)

@@ -2,6 +2,7 @@ package com.spring.jwt.entity;
 
 import com.spring.jwt.dto.BeadingCAR.BeadingCARDto;
 import com.spring.jwt.dto.CarDto;
+import java.util.UUID;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;
@@ -17,9 +18,9 @@ import java.time.LocalDate;
 @Table(name = "BeadingCAR")
 public class BeadingCAR {
     @Id
-    @GeneratedValue(strategy = GenerationType.IDENTITY)
-    @Column(name = "beadingCarId", nullable = false)
-    private Integer beadingCarId;
+    @GeneratedValue(strategy = GenerationType.AUTO)
+    @Column(name = "beadingCarId", nullable = false, updatable = false, columnDefinition = "BINARY(16)")
+    private UUID beadingCarId;
 
     @Column(name = "ac_feature")
     private Boolean acFeature;

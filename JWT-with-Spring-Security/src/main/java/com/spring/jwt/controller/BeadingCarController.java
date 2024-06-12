@@ -11,6 +11,7 @@ import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
+import java.util.UUID;
 
 @RestController
 @RequiredArgsConstructor
@@ -40,7 +41,7 @@ public class BeadingCarController {
     }
 
     @GetMapping("getbyId/{id}")
-    public ResponseEntity<?> getBeadingCarById(@PathVariable("id") Integer beadingCarId) {
+    public ResponseEntity<?> getBeadingCarById(@PathVariable("id") UUID beadingCarId) {
         try {
             BeadingCARDto beadingCar = beadingCarService.getBCarById(beadingCarId);
             return ResponseEntity.status(HttpStatus.OK).body(beadingCar);
@@ -53,7 +54,7 @@ public class BeadingCarController {
 
 
     @DeleteMapping("delete/{id}")
-    public ResponseEntity<ResponseDto> deleteBeadingCar(@PathVariable("id") Integer beadingCarId) {
+    public ResponseEntity<ResponseDto> deleteBeadingCar(@PathVariable("id") UUID beadingCarId) {
         try {
             String result = beadingCarService.deleteBCar(beadingCarId);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success", result));
@@ -65,7 +66,7 @@ public class BeadingCarController {
     }
 
     @PutMapping("edit/{id}")
-    public ResponseEntity<ResponseDto> editCarDetails(@PathVariable("id") Integer beadingCarId, @RequestBody BeadingCARDto beadingCARDto) {
+    public ResponseEntity<ResponseDto> editCarDetails(@PathVariable("id") UUID beadingCarId, @RequestBody BeadingCARDto beadingCARDto) {
         try {
             String result = beadingCarService.editCarDetails(beadingCARDto, beadingCarId);
             return ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success", result));
