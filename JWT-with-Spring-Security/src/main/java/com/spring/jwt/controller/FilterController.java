@@ -34,7 +34,7 @@ public class FilterController {
     private PendingBookingService pendingBookingService;
 
 
-    @GetMapping("/mainFilter/{pageNo}")
+    @GetMapping("/mainFilter")
     public ResponseEntity<ResponseAllCarDto> searchByFilter(
             @RequestParam(required = false) Integer minPrice,
             @RequestParam(required = false) Integer maxPrice,
@@ -43,19 +43,14 @@ public class FilterController {
             @RequestParam(required = false) String brand,
             @RequestParam(required = false) String model,
             @RequestParam(required = false) String transmission,
-            @RequestParam(required = false) String fuelType,
-            @PathVariable int pageNo) {
-
+            @RequestParam(required = false) String fuelType) {
 
         Integer convertedYear = year != null && !year.isEmpty() ? Integer.valueOf(year) : null;
 
-
-
         FilterDto filterDto = new FilterDto(minPrice, maxPrice, area, brand, model, transmission, fuelType, convertedYear);
 
-
         try {
-            List<CarDto> listOfCar = filterService.searchByFilter(filterDto, pageNo);
+            List<CarDto> listOfCar = filterService.searchByFilter(filterDto);
             ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("success");
             responseAllCarDto.setList(listOfCar);
             return ResponseEntity.status(HttpStatus.OK).body(responseAllCarDto);
@@ -65,6 +60,7 @@ public class FilterController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseAllCarDto);
         }
     }
+
 
     /**
      * Retrieves a single car by its ID.
@@ -95,27 +91,25 @@ public class FilterController {
 //        return ResponseEntity.ok(cars.get());*
     }
     @GetMapping("/getAllCars")
-    public ResponseEntity<ResponseAllCarDto> getAllCars(@RequestParam int pageNo){
-        try
-        {
-            List<CarDto> listOfCar= filterService.getAllCarsWithPages(pageNo);
+    public ResponseEntity<?> getAllCars(@RequestParam int pageNo, @RequestParam(defaultValue = "10") int pageSize) {
+        try {
+            List<CarDto> listOfCar = iCarRegister.getAllCarsWithPages(pageNo, pageSize);
 
             ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("success");
             responseAllCarDto.setList(listOfCar);
+
             return ResponseEntity.status(HttpStatus.OK).body(responseAllCarDto);
-        }
-        catch (CarNotFoundException carNotFoundException){
-//            List<CarDto> emptyList;
-            ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("unsuccess");
-            responseAllCarDto.setException(String.valueOf(carNotFoundException));
+        } catch (CarNotFoundException carNotFoundException) {
+            ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("unsuccessful");
+            responseAllCarDto.setException("Car not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseAllCarDto);
-        }
-        catch (PageNotFoundException pageNotFoundException){
-            ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("unsuccess");
-            responseAllCarDto.setException(String.valueOf(pageNotFoundException));
+        } catch (PageNotFoundException pageNotFoundException) {
+            ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("unsuccessful");
+            responseAllCarDto.setException("Page not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseAllCarDto);
         }
     }
+
     @PostMapping("/forgot-password")
     public ResponseEntity<ResponseDto> forgotPass(HttpServletRequest request) throws UserNotFoundExceptions {
         try {

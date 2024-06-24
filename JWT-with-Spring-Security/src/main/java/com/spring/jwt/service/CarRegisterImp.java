@@ -14,6 +14,8 @@ import com.spring.jwt.repository.CarRepo;
 import com.spring.jwt.repository.DealerRepository;
 import com.spring.jwt.repository.PhotoRepo;
 import jakarta.persistence.criteria.Predicate;
+import org.slf4j.Logger;
+import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
 import org.springframework.data.domain.PageRequest;
@@ -30,6 +32,9 @@ import java.util.Optional;
 public class CarRegisterImp implements ICarRegister {
     @Autowired
     private CarRepo carRepo;
+
+    private static final Logger logger = LoggerFactory.getLogger(CarRegisterImp.class);
+
 
     @Autowired
     private DealerRepository dealerRepo;
@@ -148,13 +153,16 @@ public class CarRegisterImp implements ICarRegister {
     }
 
 
-
     @Override
     public List<CarDto> getAllCarsWithPages(int pageNo, int pageSize) {
-        List<Car> listOfCar = carRepo.getPendingAndActivateCarOrderedByCreatedAtDesc();
+
+        List<Car> listOfCar = carRepo.getPendingAndActivateCarOrderedByIdDesc();
         if (listOfCar.isEmpty()) {
-            throw new CarNotFoundException("Car not found", HttpStatus.NOT_FOUND);
+            throw new CarNotFoundException("Car not found");
         }
+        System.out.println("Car IDs from repository:");
+        listOfCar.forEach(car -> System.out.println("Car ID: " + car.getId()));
+
 
         int totalCars = listOfCar.size();
         int totalPages = (int) Math.ceil((double) totalCars / pageSize);
@@ -163,7 +171,7 @@ public class CarRegisterImp implements ICarRegister {
             throw new PageNotFoundException("Page not found");
         }
 
-        int pageStart = (pageNo) * pageSize;
+        int pageStart = pageNo * pageSize;
         int pageEnd = Math.min(pageStart + pageSize, totalCars);
 
         List<CarDto> listOfCarDto = new ArrayList<>();
@@ -174,8 +182,12 @@ public class CarRegisterImp implements ICarRegister {
             listOfCarDto.add(carDto);
         }
 
+        System.out.println("CarDto IDs after pagination:");
+        listOfCarDto.forEach(carDto -> System.out.println("CarDto ID: " + carDto.getCarId()));
+
         return listOfCarDto;
     }
+
 
     @Override
     public String deleteCar(int carId, int dealerId) {
@@ -267,37 +279,33 @@ public class CarRegisterImp implements ICarRegister {
         carDto.setCarId(carId);
         return carDto;
     }
+
+    @Override
     public List<CarDto> getDetails(int dealerId, Status carStatus, int pageNo) {
         if (!dealerExists(dealerId)) {
             throw new DealerNotFoundException("Dealer not found by id");
         }
-        String statusString = carStatus.getStatus();
 
-        List<Car> listOfCar = carRepo.findByDealerIdAndCarStatus(dealerId, statusString);
+        List<Car> listOfCar = carRepo.findByDealerIdAndCarStatus(dealerId, carStatus);
 
-        if ((pageNo * 10) > listOfCar.size() - 1) {
-            throw new PageNotFoundException("page not found");
+        if (listOfCar.isEmpty()) {
+            throw new CarNotFoundException("Car not found", HttpStatus.NOT_FOUND);
         }
-        if (listOfCar.size() <= 0) {
-            throw new CarNotFoundException("car not found", HttpStatus.NOT_FOUND);
+
+        int pageSize = 10;
+        int pageStart = pageNo * pageSize;
+        int pageEnd = Math.min(pageStart + pageSize, listOfCar.size());
+
+        if (pageStart >= listOfCar.size()) {
+            throw new PageNotFoundException("Page not found");
         }
 
         List<CarDto> listOfCarDto = new ArrayList<>();
-
-        int pageStart = pageNo * 10;
-        int pageEnd = pageStart + 10;
-        int diff = (listOfCar.size()) - pageStart;
-        for (int counter = pageStart, i = 1; counter < pageEnd; counter++, i++) {
-            if (pageStart > listOfCar.size()) {
-                break;
-            }
-
-            CarDto carDto = new CarDto(listOfCar.get(counter));
-            carDto.setCarId(listOfCar.get(counter).getId());
+        for (int i = pageStart; i < pageEnd; i++) {
+            Car car = listOfCar.get(i);
+            CarDto carDto = new CarDto(car);
+            carDto.setCarId(car.getId());
             listOfCarDto.add(carDto);
-            if (diff == i) {
-                break;
-            }
         }
 
         return listOfCarDto;

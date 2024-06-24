@@ -104,6 +104,7 @@ public class Car {
 
     @OneToMany(mappedBy = "carCar")
     private Set<PendingBooking> pendingBookings = new LinkedHashSet<>();
+
     public Car(CarDto carDto){
         this.acFeature = carDto.getAcFeature();
         this.date=carDto.getDate();

@@ -4,12 +4,10 @@ import com.spring.jwt.Interfaces.FinalBidService;
 import com.spring.jwt.dto.FinalBidDto;
 import com.spring.jwt.entity.BidCars;
 import com.spring.jwt.entity.Final1stBid;
-import com.spring.jwt.entity.PlacedBid;
 import com.spring.jwt.entity.User;
 import com.spring.jwt.exception.*;
 import com.spring.jwt.repository.BidCarsRepo;
 import com.spring.jwt.repository.FinalBidRepo;
-import com.spring.jwt.repository.PlacedBidRepo;
 import com.spring.jwt.repository.UserRepository;
 import lombok.RequiredArgsConstructor;
 import org.modelmapper.ModelMapper;
@@ -37,6 +35,7 @@ public class Final1stBidServiceImpl implements FinalBidService {
     public String FinalPlaceBid(FinalBidDto finalBidDto) throws BidAmountLessException, BidForSelfAuctionException {
         Integer bidCarId = finalBidDto.getBidCarId();
         Optional<BidCars> byId = bidCarsRepo.findById(bidCarId);
+
         if (byId.isEmpty()){
             throw new BeadingCarNotFoundException("Bid cannot be placed as the car is not found in our database");
         }
@@ -44,11 +43,12 @@ public class Final1stBidServiceImpl implements FinalBidService {
         if (finalBidDto.getUserId().equals(bidCar.getUserId())) {
             throw new BidForSelfAuctionException("User cannot bid for their own auction.");
         }
-
         Final1stBid final1stBid = convertToEntity(finalBidDto);
         final1stBid.setBidCarId(bidCarId);
         final1stBid.setDateTime(LocalDateTime.now());
+
         finalBidRepo.save(final1stBid);
+
         return "Bid placed successfully.";
     }
 

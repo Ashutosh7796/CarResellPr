@@ -11,6 +11,7 @@ import com.spring.jwt.utils.BaseResponseDTO;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.security.access.prepost.PreAuthorize;
 import org.springframework.web.bind.annotation.*;
 
 import java.security.Principal;
@@ -60,14 +61,14 @@ public class UserController {
         }
     }
 
-    @RequestMapping(value = "/delete/{id}" ,method = RequestMethod.DELETE)
-    public ResponseEntity<?> removeUser(@PathVariable int id){
-
+    @PreAuthorize("hasAuthority('ADMIN')")
+    @DeleteMapping(value = "/delete")
+    public ResponseEntity<?> removeUser(@RequestParam("userId") int id) {
         try {
-            BaseResponseDTO result= userService.removeUser(id);
-            return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDTO("Successful",result.getMessage()));
-        }catch (UserNotFoundExceptions exception){
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BaseResponseDTO("Unsuccessful","user not found"));
+            BaseResponseDTO result = userService.removeUser(id);
+            return ResponseEntity.status(HttpStatus.OK).body(new BaseResponseDTO("Successful", result.getMessage()));
+        } catch (UserNotFoundExceptions exception) {
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new BaseResponseDTO("Unsuccessful", "User not found"));
         }
     }
 

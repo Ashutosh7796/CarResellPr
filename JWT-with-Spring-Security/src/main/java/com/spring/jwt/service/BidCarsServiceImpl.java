@@ -1,10 +1,8 @@
 package com.spring.jwt.service;
 
 import com.spring.jwt.Interfaces.BidCarsService;
-import com.spring.jwt.dto.BeadingCAR.BeadingCARDto;
 import com.spring.jwt.dto.BidCarsDTO;
 import com.spring.jwt.dto.BidDetailsDTO;
-import com.spring.jwt.dto.ResDtos;
 import com.spring.jwt.entity.BeadingCAR;
 import com.spring.jwt.entity.BidCars;
 import com.spring.jwt.entity.User;

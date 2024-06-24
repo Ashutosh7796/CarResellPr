@@ -66,6 +66,7 @@ public class CarDto {
     private DealerDto dealer;
 
     private int dealer_id;
+
     private LocalDate date;
 
 
