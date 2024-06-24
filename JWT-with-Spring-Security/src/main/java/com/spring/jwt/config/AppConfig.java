@@ -13,6 +13,7 @@ import org.modelmapper.ModelMapper;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.context.annotation.Bean;
 import org.springframework.context.annotation.Configuration;
+import org.springframework.context.annotation.Lazy;
 import org.springframework.core.Ordered;
 import org.springframework.core.annotation.Order;
 import org.springframework.security.authentication.AuthenticationManager;
@@ -40,36 +41,34 @@ public class AppConfig {
     private CustomAuthenticationProvider customAuthenticationProvider;
 
     @Autowired
-    JwtConfig jwtConfig;
-
+    private JwtConfig jwtConfig;
 
     @Autowired
+    @Lazy
     private JwtService jwtService;
 
     @Bean
-    public JwtConfig jwtConfig(){
+    public JwtConfig jwtConfig() {
         return new JwtConfig();
     }
 
-
     @Bean
-    public BCryptPasswordEncoder passwordEncoder(){
-
+    public BCryptPasswordEncoder passwordEncoder() {
         return new BCryptPasswordEncoder();
     }
+
     @Bean
     public ModelMapper modelMapper() {
         return new ModelMapper();
     }
 
     @Bean
-    public UserDetailsService userDetailsService(){
-
+    public UserDetailsService userDetailsService() {
         return new UserDetailsServiceCustom();
     }
 
     @Autowired
-    public void configGlobal(final AuthenticationManagerBuilder auth){
+    public void configGlobal(final AuthenticationManagerBuilder auth) {
         auth.authenticationProvider(customAuthenticationProvider);
     }
 
@@ -89,7 +88,6 @@ public class AppConfig {
                 .csrf().disable()
                 .formLogin().disable()
                 .authorizeHttpRequests()
-
                 .requestMatchers("/account/**").permitAll()
                 .requestMatchers(
                         "/api/v1/auth/**",
@@ -107,15 +105,14 @@ public class AppConfig {
                 .requestMatchers("/cars/**").permitAll()
                 .requestMatchers("/finalBid/**").permitAll()
                 .requestMatchers("/BeadingCarController/**").permitAll()
-                .requestMatchers("/booking/**").hasAnyAuthority("USER", "ADMIN","DEALER")
+                .requestMatchers("/booking/**").hasAnyAuthority("USER", "ADMIN", "DEALER")
                 .requestMatchers("/userProfilePhoto/**").permitAll()
                 .requestMatchers("/uploadFile/**").permitAll()
-
                 .requestMatchers("/confirmBooking/**").permitAll()
                 .requestMatchers("/photo/**").permitAll()
                 .requestMatchers("/admin/**").hasAuthority("ADMIN")
                 .requestMatchers("/dealerDocument/**").hasAnyAuthority("ADMIN", "DEALER")
-                .requestMatchers("/user/**").permitAll()
+                .requestMatchers("/user/**").hasAnyAuthority("USER", "ADMIN")
                 .requestMatchers("/dealer/**").hasAnyAuthority("DEALER", "ADMIN")
                 .requestMatchers("/car/**").permitAll()
                 .requestMatchers("/carVerify/**").permitAll()
@@ -124,7 +121,6 @@ public class AppConfig {
                 .requestMatchers("/ispProfile/**").permitAll()
                 .requestMatchers("/WalletAccount/**").permitAll()
                 .requestMatchers("/transactions/**").permitAll()
-                .requestMatchers("/verification/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .authenticationManager(manager)
@@ -138,18 +134,17 @@ public class AppConfig {
                 .accessDeniedHandler(new CustomAccessDeniedHandler())
                 .and()
                 .addFilterBefore(new JwtUsernamePasswordAuthenticationFilter(manager, jwtConfig, jwtService), UsernamePasswordAuthenticationFilter.class)
-                .addFilterAfter(new JwtTokenAuthenticationFilter(jwtConfig, jwtService), UsernamePasswordAuthenticationFilter.class)
-        ;
+                .addFilterAfter(new JwtTokenAuthenticationFilter(jwtConfig, jwtService), UsernamePasswordAuthenticationFilter.class);
         return http.build();
     }
+
     @Bean
     public CorsConfigurationSource corsConfigurationSource() {
         return new CorsConfigurationSource() {
             @Override
             public CorsConfiguration getCorsConfiguration(HttpServletRequest request) {
                 CorsConfiguration config = new CorsConfiguration();
-                config.setAllowedOrigins(Collections.singletonList("http://localhost:5173"));
-                config.setAllowedOrigins(Collections.singletonList("http://localhost:3000"));
+                config.setAllowedOrigins(Arrays.asList("https://cartechindia.com", "http://localhost:5173"));
                 config.setAllowedMethods(Collections.singletonList("*"));
                 config.setAllowCredentials(true);
                 config.setAllowedHeaders(Collections.singletonList("*"));
@@ -160,10 +155,4 @@ public class AppConfig {
         };
     }
 
-
 }
-
-
-
-
-

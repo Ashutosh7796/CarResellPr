@@ -15,6 +15,7 @@ import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.http.HttpStatus;
 import org.springframework.stereotype.Service;
+
 import java.util.List;
 import java.util.Optional;
 import java.util.stream.Collectors;
@@ -115,10 +116,8 @@ public class InspectorProfileServiceImpl implements InspectorProfileService {
         return inspectorProfileDto;
     }
 
-
     @Override
     public Page<InspectorProfileDto> getAllProfiles(Integer pageNo, Integer pageSize) {
-
         Pageable pageable = PageRequest.of(pageNo, pageSize);
         Page<InspectorProfile> allProfiles = inspectorProfileRepo.findAll(pageable);
 
@@ -130,7 +129,7 @@ public class InspectorProfileServiceImpl implements InspectorProfileService {
                 .map(this::convertToDto)
                 .collect(Collectors.toList());
 
-        return new PageImpl<>(profileDtoList, pageable, allProfiles.getTotalPages());
+        return new PageImpl<>(profileDtoList, pageable, allProfiles.getTotalElements());
     }
 
 

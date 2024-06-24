@@ -1,7 +1,6 @@
 package com.spring.jwt.Interfaces;
 
 import com.spring.jwt.dto.BeedingDtos.PlacedBidDTO;
-import com.spring.jwt.entity.PlacedBid;
 import com.spring.jwt.exception.BidAmountLessException;
 import com.spring.jwt.exception.BidForSelfAuctionException;
 

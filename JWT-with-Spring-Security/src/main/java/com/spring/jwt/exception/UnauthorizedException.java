@@ -1,4 +1,4 @@
-package com.spring.jwt.jwt.exception;
+package com.spring.jwt.exception;
 
 import lombok.NoArgsConstructor;
 

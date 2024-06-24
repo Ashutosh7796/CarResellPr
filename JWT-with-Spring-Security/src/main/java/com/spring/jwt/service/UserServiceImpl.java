@@ -8,7 +8,6 @@ import com.spring.jwt.dto.UserProfileDto;
 import com.spring.jwt.entity.*;
 import com.spring.jwt.exception.*;
 import com.spring.jwt.repository.RoleRepository;
-import com.spring.jwt.repository.SmsRepo;
 import com.spring.jwt.repository.UserProfileRepository;
 import com.spring.jwt.repository.UserRepository;
 import com.spring.jwt.utils.BaseResponseDTO;
@@ -38,41 +37,54 @@ public class UserServiceImpl implements UserService {
     @Autowired
     private BCryptPasswordEncoder passwordEncoder;
 
-    @Autowired
-    private SmsRepo smsRepo;
-
     @Override
     public BaseResponseDTO registerAccount(RegisterDto registerDto) {
+
         BaseResponseDTO response = new BaseResponseDTO();
 
+        if(registerDto.getPassword().isEmpty()) {
+            throw new RuntimeException("Password cannot be null");
+        }
         validateAccount(registerDto);
 
-        User user = insertUser(registerDto);
+//        if (registerDto.getRoles().equalsIgnoreCase("ADMIN")) {
+//            long adminCount = userRepository.countByRoleName("ADMIN");
+//            if (adminCount >= 3) {
+//               throw new UnauthorizedException ("You are not Authorized to Create This Account");
+//            }
+//        }
+//        if (isDealerOrInspector(registerDto.getRoles()) && !userHasAdminAuthority()) {
+//            throw new UnauthorizedException("User does not have the authority of ADMIN to create this account.");
+//        }
 
+        User user = insertUser(registerDto);
 
         try {
             userRepository.save(user);
             response.setCode(String.valueOf(HttpStatus.OK.value()));
-            response.setMessage("Account Created");
+            response.setMessage("Account Created !!!!");
         } catch (UserAlreadyExistException e) {
             response.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
-            response.setMessage("User already exist");
+            response.setMessage("User already exist !!");
         }catch (BaseException e){
             response.setCode(String.valueOf(HttpStatus.BAD_REQUEST.value()));
-            response.setMessage("Invalid role");
+            response.setMessage("Invalid role !!");
         }
         return response;
     }
 
+//    private boolean isDealerOrInspector(String role) {
+//        return role.equals("DEALER") || role.equals("INSPECTOR");
+//    }
+//
+//    private boolean userHasAdminAuthority() {
+//        Authentication authentication = SecurityContextHolder.getContext().getAuthentication();
+//        return authentication != null && authentication.getAuthorities().stream()
+//                .anyMatch(authority -> authority.getAuthority().equals("ADMIN"));
+//    }
+
     private User insertUser(RegisterDto registerDto) {
-//        SmsEntity searchMobileNo = smsRepo.findUserWithMobileNo(registerDto.getMobileNo());
-
         User user = new User();
-
-//        if (searchMobileNo != null && !Objects.equals(searchMobileNo.getStatus(), "Pending"));
-//            else {
-//            throw new MobileNumberNotVerifiedException("Mobile Number is Not Verified Please verify To Continue");
-//        }
         user.setEmail(registerDto.getEmail());
         user.setMobileNo(registerDto.getMobileNo());
         user.setPassword(passwordEncoder.encode(registerDto.getPassword()));
@@ -126,7 +138,7 @@ public class UserServiceImpl implements UserService {
 
         User user = userRepository.findByEmail(registerDto.getEmail());
         if (!ObjectUtils.isEmpty(user)) {
-            throw new UserAlreadyExistException(String.valueOf(HttpStatus.BAD_REQUEST.value()), "Username already exists");
+            throw new UserAlreadyExistException(String.valueOf(HttpStatus.BAD_REQUEST.value()), "Username already exists !!");
         }
 
         List<String> roles = roleRepository.findAll().stream().map(Role::getName).toList();
@@ -305,7 +317,7 @@ public class UserServiceImpl implements UserService {
 
             String resetLink = resetPasswordLink;
 
-            String subject = "Reset Password";
+            String subject = "Checking: confirmation";
 
             String from = "b.aniket1414@gmail.com";
 

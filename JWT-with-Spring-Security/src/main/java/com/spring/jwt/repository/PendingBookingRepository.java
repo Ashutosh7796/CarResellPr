@@ -14,8 +14,6 @@ public interface PendingBookingRepository extends JpaRepository<PendingBooking, 
         void deleteByCarCarId(Integer carId);
 
         List<PendingBooking> findByCarCarId(Integer carId);
-
-
         public Optional<List<PendingBooking>> getAllPendingBookingByUserId(int userId);
 }
 

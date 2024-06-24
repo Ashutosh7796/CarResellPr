@@ -3,10 +3,9 @@ package com.spring.jwt.Wallet.Controller;
 
 import com.spring.jwt.Wallet.Dto.CreateWalletAccountDTO;
 import com.spring.jwt.Wallet.Dto.WalletAccountDTO;
-
 import com.spring.jwt.Wallet.Interface.AccountService;
-import com.spring.jwt.dto.ResponseDto;
 import com.spring.jwt.dto.NewResponseDto;
+import com.spring.jwt.dto.ResponseDto;
 import com.spring.jwt.exception.AccountAlreadyExistsException;
 import com.spring.jwt.exception.ResourceNotFoundException;
 import com.spring.jwt.exception.UserNotFoundExceptions;
@@ -54,7 +53,6 @@ public class AccountControllers {
             accountDTO.setStatus(requestDTO.getStatus());
             accountDTO.setOpeningBalance(requestDTO.getOpeningBalance());
 
-            // If you want to set LastUpdateTime to current time, you can do it here
             accountDTO.setLastUpdateTime(LocalDateTime.now());
 
             WalletAccountDTO createdAccount = accountService.createAccount(accountDTO);
