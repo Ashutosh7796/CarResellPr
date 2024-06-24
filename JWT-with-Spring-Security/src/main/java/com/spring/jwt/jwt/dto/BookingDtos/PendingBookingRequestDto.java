@@ -1,20 +1,14 @@
-package com.spring.jwt.dto;
+package com.spring.jwt.jwt.dto.BookingDtos;
 
-
+import com.spring.jwt.dto.BookingDtos.DealerDetails;
 import com.spring.jwt.entity.Car;
 import com.spring.jwt.entity.Status;
-import lombok.AllArgsConstructor;
-import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
 import java.time.LocalDate;
 
 @Data
-@NoArgsConstructor
-@AllArgsConstructor
-@Builder
-public class CarDto {
+public class PendingBookingRequestDto {
     private int carId;
 
     private Boolean acFeature;
@@ -41,6 +35,8 @@ public class CarDto {
 
     private String model;
 
+    private int noOfWheels;
+
     private int ownerSerial;
 
     private Boolean powerWindowFeature;
@@ -51,9 +47,10 @@ public class CarDto {
 
     private String registration;
 
-    private String safetyDescription;
 
     private String transmission;
+
+    private int year;
 
     private String title;
 
@@ -61,19 +58,18 @@ public class CarDto {
 
     private String carInsuranceDate;
 
-    private int year;
-
-    private DealerDto dealer;
+    private DealerDetails dealerDetails;
 
     private int dealer_id;
 
     private LocalDate date;
 
 
-
-    public CarDto(Car car){
+    public PendingBookingRequestDto(Car car){
+        this.carId = car.getId();
         this.acFeature = car.getAcFeature();
         this.musicFeature = car.getMusicFeature();
+        this.date=car.getDate();
         this.area = car.getArea();
         this.brand = car.getBrand();
         this.carInsurance = car.getCarInsurance();
@@ -92,7 +88,6 @@ public class CarDto {
         this.transmission = car.getTransmission();
         this.year = car.getYear();
         this.dealer_id=car.getDealerId();
-        this.date = car.getDate();
         this.title = car.getTitle();
         this.variant = car.getVariant();
         this.carInsuranceDate = car.getCarInsuranceDate();

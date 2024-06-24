@@ -1,6 +1,7 @@
-package com.spring.jwt.dto;
+package com.spring.jwt.jwt.dto;
 
 
+import com.spring.jwt.dto.DealerDto;
 import com.spring.jwt.entity.Car;
 import com.spring.jwt.entity.Status;
 import lombok.AllArgsConstructor;

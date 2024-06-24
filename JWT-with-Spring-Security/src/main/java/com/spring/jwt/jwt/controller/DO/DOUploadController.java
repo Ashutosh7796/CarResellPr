@@ -1,10 +1,10 @@
-package com.spring.jwt.controller.DO;
+package com.spring.jwt.jwt.controller.DO;
 
 import com.spring.jwt.Interfaces.IDocument;
 import com.spring.jwt.dto.DocumentDto;
 import com.spring.jwt.dto.ResponceDto;
+import com.spring.jwt.dto.ResponseDto;
 import com.spring.jwt.service.DOService;
-import io.swagger.v3.oas.annotations.tags.Tag;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.http.*;
@@ -49,6 +49,7 @@ public class DOUploadController {
                 Files.createDirectories(filePath.getParent());
             }
 
+            // Save the uploaded file to the specified directory
             file.transferTo(filePath);
 
             byte[] imageBytes = file.getBytes();
@@ -103,7 +104,6 @@ public class DOUploadController {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponceDto("unsuccess", String.valueOf(e)));
 
         } catch (IOException e) {
-
             System.err.println(e);
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponceDto("unsuccess", "Failed to upload image"));
         } catch (Exception e) {
@@ -114,6 +114,19 @@ public class DOUploadController {
 
         }
 
+    }
+    @GetMapping("/delete")
+    private ResponseEntity<?> delete(@RequestParam Integer DocumentId) {
+        try {
+            String documents =iDocument.deleteById(DocumentId);
+            ResponseDto responceDto = new ResponseDto("success",documents);
+            return ResponseEntity.status(HttpStatus.OK).body(responceDto);
+        } catch (Exception e) {
+            System.err.println(e);
+
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponceDto("unsuccess", String.valueOf(e)));
+
+        }
     }
 
     @GetMapping("/getDocuments")

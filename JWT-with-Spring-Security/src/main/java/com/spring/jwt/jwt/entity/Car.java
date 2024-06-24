@@ -1,6 +1,8 @@
-package com.spring.jwt.entity;
+package com.spring.jwt.jwt.entity;
 
 import com.spring.jwt.dto.CarDto;
+import com.spring.jwt.entity.PendingBooking;
+import com.spring.jwt.entity.Status;
 import jakarta.persistence.*;
 import lombok.AllArgsConstructor;
 import lombok.Getter;

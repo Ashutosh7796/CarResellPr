@@ -1,4 +1,4 @@
-package com.spring.jwt.repository;
+package com.spring.jwt.jwt.repository;
 
 import com.spring.jwt.entity.PendingBooking;
 import org.springframework.data.jpa.repository.JpaRepository;
@@ -14,8 +14,6 @@ public interface PendingBookingRepository extends JpaRepository<PendingBooking, 
         void deleteByCarCarId(Integer carId);
 
         List<PendingBooking> findByCarCarId(Integer carId);
-
-
         public Optional<List<PendingBooking>> getAllPendingBookingByUserId(int userId);
 }
 
