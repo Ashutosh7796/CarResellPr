@@ -32,7 +32,7 @@ public class Car {
     @Column(name = "area", length = 45)
     private String area;
 
-    @Column(name = "`variant", length = 45)
+    @Column(name = "variant", length = 45)
     private String variant;
 
     @Column(name = "brand", nullable = false, length = 45)
@@ -102,6 +102,7 @@ public class Car {
 
     @OneToMany(mappedBy = "carCar")
     private Set<PendingBooking> pendingBookings = new LinkedHashSet<>();
+
     public Car(CarDto carDto){
         this.acFeature = carDto.getAcFeature();
         this.date=carDto.getDate();

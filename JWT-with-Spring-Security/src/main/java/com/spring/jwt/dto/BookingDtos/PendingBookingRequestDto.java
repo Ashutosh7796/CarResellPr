@@ -5,6 +5,7 @@ import com.spring.jwt.entity.Status;
 import lombok.Data;
 
 import java.time.LocalDate;
+
 @Data
 public class PendingBookingRequestDto {
     private int carId;
