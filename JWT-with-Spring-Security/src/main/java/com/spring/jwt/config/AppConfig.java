@@ -122,6 +122,7 @@ public class AppConfig {
                 .requestMatchers("/ispProfile/**").permitAll()
                 .requestMatchers("/WalletAccount/**").permitAll()
                 .requestMatchers("/transactions/**").permitAll()
+                .requestMatchers("/brands/**").permitAll()
                 .anyRequest().authenticated()
                 .and()
                 .authenticationManager(manager)

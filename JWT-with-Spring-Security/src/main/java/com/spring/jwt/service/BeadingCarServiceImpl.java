@@ -12,6 +12,8 @@ import org.springframework.transaction.annotation.Transactional;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.UUID;
+
 @Service
 @Transactional
 @RequiredArgsConstructor
@@ -27,7 +29,7 @@ public class BeadingCarServiceImpl implements BeadingCarService {
     }
 
     @Override
-    public String editCarDetails(BeadingCARDto beadingCARDto, Integer beadingCarId) {
+    public String editCarDetails(BeadingCARDto beadingCARDto, UUID beadingCarId) {
         BeadingCAR beadingCAR = beadingCarRepo.findById(beadingCarId).orElseThrow(()->new BeadingCarNotFoundException(("beadingCAR not found"), HttpStatus.NOT_FOUND));
         beadingCAR.setAcFeature(beadingCARDto.getAcFeature());
         beadingCAR.setMusicFeature(beadingCARDto.getMusicFeature());
@@ -70,13 +72,13 @@ public class BeadingCarServiceImpl implements BeadingCarService {
     }
 
     @Override
-    public String deleteBCar(Integer beadingCarId) {
+    public String deleteBCar(UUID beadingCarId) {
         beadingCarRepo.deleteById(beadingCarId);
         return "Beading car deleted successfully";
     }
 
     @Override
-    public BeadingCARDto getBCarById(Integer beadingCarId) {
+    public BeadingCARDto getBCarById(UUID beadingCarId) {
         BeadingCAR beadingCAR = beadingCarRepo.findById(beadingCarId)
                 .orElseThrow(() -> new BeadingCarNotFoundException("Beading car not found with id: " + beadingCarId, HttpStatus.NOT_FOUND));
         return new BeadingCARDto(beadingCAR);

@@ -7,6 +7,7 @@ import lombok.Getter;
 import lombok.Setter;
 
 import java.time.LocalDate;
+import java.util.UUID;
 
 @Setter
 @Getter
@@ -17,7 +18,7 @@ public class BeadingCAR {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "beadingCarId", nullable = false)
-    private Integer beadingCarId;
+    private UUID beadingCarId;
 
     @Column(name = "ac_feature")
     private Boolean acFeature;

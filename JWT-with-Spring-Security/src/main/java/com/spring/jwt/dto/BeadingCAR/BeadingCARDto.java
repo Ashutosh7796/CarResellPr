@@ -4,10 +4,12 @@ import com.spring.jwt.entity.BeadingCAR;
 import lombok.Data;
 
 import java.time.LocalDate;
+import java.util.UUID;
+
 @Data
 public class BeadingCARDto {
 
-    private Integer beadingCarId;
+    private UUID beadingCarId;
 
 
     private Boolean acFeature;

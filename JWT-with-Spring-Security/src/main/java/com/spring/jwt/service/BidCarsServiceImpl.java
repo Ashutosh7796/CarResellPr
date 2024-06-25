@@ -19,6 +19,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 
 @Service
 @RequiredArgsConstructor
@@ -44,7 +45,7 @@ public class BidCarsServiceImpl implements BidCarsService {
     }
 
     @Override
-    public BidDetailsDTO getbyBidId(Integer bidCarId, Integer beadingCarId) {
+    public BidDetailsDTO getbyBidId(Integer bidCarId, UUID beadingCarId) {
         Optional<BidCars> bidCarOptional  = bidCarsRepo.findById(bidCarId);
         Optional<BeadingCAR> beadingCarOptional  = beadingCarRepo.findById(beadingCarId);
 

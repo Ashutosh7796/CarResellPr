@@ -37,15 +37,15 @@ public class CarDto {
 
     private String fuelType;
 
-    private int kmDriven;
+    private Integer kmDriven;
 
     private String model;
 
-    private int ownerSerial;
+    private Integer ownerSerial;
 
     private Boolean powerWindowFeature;
 
-    private int price;
+    private Integer price;
 
     private Boolean rearParkingCameraFeature;
 
@@ -61,7 +61,7 @@ public class CarDto {
 
     private String carInsuranceDate;
 
-    private int year;
+    private Integer year;
 
     private DealerDto dealer;
 
