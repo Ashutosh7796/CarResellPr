@@ -18,6 +18,7 @@ import org.springframework.web.bind.annotation.*;
 
 import java.util.List;
 import java.util.Optional;
+import java.util.UUID;
 import java.util.concurrent.Executors;
 import java.util.concurrent.ScheduledExecutorService;
 import java.util.concurrent.TimeUnit;
@@ -105,7 +106,7 @@ public class StartBidingController {
     }
 
     @GetMapping("/getById")
-     public ResponseEntity<?> getbiddingcar (@RequestParam Integer bidCarId,@RequestParam  Integer beadingCarId) {
+     public ResponseEntity<?> getbiddingcar (@RequestParam Integer bidCarId,@RequestParam UUID beadingCarId) {
          BidDetailsDTO bidDetailsDTO = bidCarsService.getbyBidId(bidCarId, beadingCarId);
         return ResponseEntity.status(HttpStatus.OK).body(new ResDtos("Success", bidDetailsDTO));
      }

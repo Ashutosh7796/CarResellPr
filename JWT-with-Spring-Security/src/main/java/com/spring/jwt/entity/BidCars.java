@@ -6,6 +6,7 @@ import lombok.NoArgsConstructor;
 
 import java.time.LocalDateTime;
 import java.time.ZoneId;
+import java.util.UUID;
 
 @Entity
 @Data
@@ -17,7 +18,7 @@ public class BidCars {
    private Integer bidCarId;
 
    @Column(name = "beadingCardId")
-   private Integer beadingCarId;
+   private UUID beadingCarId;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;
