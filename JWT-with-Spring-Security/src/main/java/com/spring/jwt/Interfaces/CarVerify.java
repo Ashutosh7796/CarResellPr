@@ -13,4 +13,5 @@ public interface CarVerify {
     public List<CarVerifyDto> getCarByUserId(Integer userId);
 
     public List<CarVerifyDto>getByCarId(Integer carId);
+
 }

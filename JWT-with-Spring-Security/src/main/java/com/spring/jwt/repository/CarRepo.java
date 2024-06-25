@@ -3,6 +3,8 @@ package com.spring.jwt.repository;
 
 import com.spring.jwt.entity.Car;
 import com.spring.jwt.entity.Status;
+import org.springframework.data.domain.Page;
+import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.repository.JpaRepository;
 import org.springframework.data.jpa.repository.JpaSpecificationExecutor;
 import org.springframework.data.jpa.repository.Query;
@@ -37,6 +39,8 @@ public interface CarRepo extends JpaRepository<Car, Integer>, JpaSpecificationEx
 
     @Query("SELECT c FROM Car c WHERE c.carStatus IN ('PENDING', 'ACTIVE') ORDER BY c.id DESC")
     List<Car> getPendingAndActivateCarOrderedByIdDesc();
+
+    Page<Car> findByDealerId(Integer dealerId, Pageable pageable);
 
 }
 

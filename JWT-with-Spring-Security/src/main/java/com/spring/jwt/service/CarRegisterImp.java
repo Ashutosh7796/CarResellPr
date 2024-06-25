@@ -18,6 +18,7 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.data.domain.Page;
+import org.springframework.data.domain.PageImpl;
 import org.springframework.data.domain.PageRequest;
 import org.springframework.data.domain.Pageable;
 import org.springframework.data.jpa.domain.Specification;
@@ -27,6 +28,7 @@ import org.springframework.stereotype.Service;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.Optional;
+import java.util.stream.Collectors;
 
 @Service
 public class CarRegisterImp implements ICarRegister {
@@ -264,6 +266,23 @@ public class CarRegisterImp implements ICarRegister {
         }
 
         return listOfCarDto;
+    }
+
+    @Override
+    public Page<CarDto> getCarsByDealerId(Integer dealerId, Integer pageNo, Integer pageSize) {
+
+        Pageable pageable = PageRequest.of(pageNo, pageSize);
+        Page<Car> allProfiles = carRepo.findByDealerId(dealerId, pageable);
+
+        if (allProfiles.isEmpty()) {
+            throw new PageNotFoundException("Page Not Found");
+        }
+
+        List<CarDto> profileDtoList = allProfiles.stream()
+                .map(this::convertToDto)
+                .collect(Collectors.toList());
+
+        return new PageImpl<>(profileDtoList, pageable, allProfiles.getTotalElements());
     }
 
     private boolean dealerExists(int dealerId) {
