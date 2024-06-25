@@ -10,7 +10,6 @@ import lombok.RequiredArgsConstructor;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
-import org.springframework.web.server.ResponseStatusException;
 
 import java.util.List;
 
@@ -21,14 +20,18 @@ public class PlaceBidController {
 
     private final PlacedBidService placedBidService;
 
-        @PostMapping("/placeBid")
+
+    @PostMapping("/placeBid")
     private ResponseEntity<?> placeBid(@RequestBody PlacedBidDTO placedBidDTO, @RequestParam Integer bidCarId) {
             try {
                 String result = placedBidService.placeBid(placedBidDTO, bidCarId);
                 return (ResponseEntity.status(HttpStatus.OK).body(new ResponseDto("success", result)));
             } catch (BidAmountLessException | BidForSelfAuctionException e) {
-                throw new ResponseStatusException(HttpStatus.BAD_REQUEST, "Bid amount smaller than highest bid");
+                return ResponseEntity.status(HttpStatus.BAD_REQUEST).body(new ResponseDto("error", e.getMessage()));
+            } catch (InsufficientBalanceException e) {
+                return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseDto("error", e.getMessage()));
             }
+
         }
 
     @GetMapping("/user/{userId}")
@@ -52,8 +55,9 @@ public class PlaceBidController {
             return ResponseEntity.ok(new ResponseSinglePlacedBid("Placed bid with ID " + placedBidId + " retrieved successfully", placedBid, null));
         } catch (PlacedBidNotFoundExceptions e) {
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponseSinglePlacedBid(e.getMessage(), null, null));
-        } catch (Exception e) {
+        } catch (RuntimeException e) {
             return ResponseEntity.status(HttpStatus.INTERNAL_SERVER_ERROR).body(new ResponseSinglePlacedBid("An error occurred", null, e.getMessage()));
+
         }
     }
 

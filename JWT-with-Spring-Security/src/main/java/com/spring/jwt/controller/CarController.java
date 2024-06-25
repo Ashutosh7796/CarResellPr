@@ -9,6 +9,7 @@ import com.spring.jwt.exception.DealerNotFoundException;
 import com.spring.jwt.exception.PageNotFoundException;
 import com.spring.jwt.repository.CarRepo;
 import lombok.RequiredArgsConstructor;
+import org.springframework.data.domain.Page;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.security.access.prepost.PreAuthorize;
@@ -153,6 +154,30 @@ CarController {
         } catch (PageNotFoundException pageNotFoundException) {
             ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("unsuccess");
             responseAllCarDto.setException("page not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseAllCarDto);
+        }
+    }
+
+    @GetMapping("/getAllCarsByDealerId")
+    public ResponseEntity<?> getAllCarsByDealerId(
+            @RequestParam(value = "pageNo", defaultValue = "0") Integer pageNo,
+            @RequestParam(value = "pageSize", defaultValue = "10") Integer pageSize,
+            @RequestParam Integer dealerId) {
+
+        try {
+            Page<CarDto> allCarsByDealerId = iCarRegister.getCarsByDealerId(dealerId, pageNo, pageSize);
+            ResponseAllCarDto carDto = new ResponseAllCarDto("Success");
+            carDto.setTotalPages(allCarsByDealerId.getTotalPages());
+            carDto.setList(allCarsByDealerId.getContent());
+            return ResponseEntity.status(HttpStatus.OK).body(carDto);
+
+        } catch (CarNotFoundException carNotFoundException) {
+            ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("unsuccessful");
+            responseAllCarDto.setException("Car not found");
+            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseAllCarDto);
+        } catch (PageNotFoundException pageNotFoundException) {
+            ResponseAllCarDto responseAllCarDto = new ResponseAllCarDto("unsuccessful");
+            responseAllCarDto.setException("Page not found");
             return ResponseEntity.status(HttpStatus.NOT_FOUND).body(responseAllCarDto);
         }
     }

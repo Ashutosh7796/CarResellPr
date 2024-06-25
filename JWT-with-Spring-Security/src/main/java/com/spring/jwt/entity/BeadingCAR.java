@@ -23,6 +23,7 @@ public class BeadingCAR {
     @Column(name = "ac_feature")
     private Boolean acFeature;
 
+
     @Column(name = "music_feature")
     private Boolean musicFeature;
 

@@ -1,14 +1,13 @@
 package com.spring.jwt.service;
 
 import com.spring.jwt.Interfaces.PlacedBidService;
+import com.spring.jwt.Wallet.Entity.WalletAccount;
+import com.spring.jwt.Wallet.Repo.AccountRepository;
 import com.spring.jwt.dto.BeedingDtos.PlacedBidDTO;
 import com.spring.jwt.entity.BidCars;
 import com.spring.jwt.entity.PlacedBid;
 import com.spring.jwt.entity.User;
-import com.spring.jwt.exception.BidAmountLessException;
-import com.spring.jwt.exception.BidNotFoundExceptions;
-import com.spring.jwt.exception.PlacedBidNotFoundExceptions;
-import com.spring.jwt.exception.UserNotFoundExceptions;
+import com.spring.jwt.exception.*;
 import com.spring.jwt.repository.BidCarsRepo;
 import com.spring.jwt.repository.PlacedBidRepo;
 import com.spring.jwt.repository.UserRepository;
@@ -29,19 +28,42 @@ public class PlacedBidServiceImpl implements PlacedBidService {
 
       private final ModelMapper modelMapper;
 
+      private final AccountRepository accountRepository;
+
       private final UserRepository userRepository;
 
 
     @Override
-    public String placeBid(PlacedBidDTO placedBidDTO, Integer bidCarId) throws BidAmountLessException {
-        Optional<BidCars> byId = bidCarsRepo.findById(bidCarId);
-        if (byId.isEmpty()){
+    public String placeBid(PlacedBidDTO placedBidDTO, Integer bidCarId) throws BidAmountLessException, BidForSelfAuctionException {
+        Optional<BidCars> carbyId = bidCarsRepo.findById(bidCarId);
+
+        User byUserId = userRepository.findByUserId(placedBidDTO.getUserId());
+
+        Optional<WalletAccount> accountbalance = accountRepository.findByUserId(placedBidDTO.getUserId());
+
+        if (accountbalance.isEmpty()) {
+            throw new UserNotFoundExceptions("Account balance not found for user: " + placedBidDTO.getUserId());
+        }
+        WalletAccount accountBalance = accountbalance.get();
+        if (accountBalance.getOpeningBalance() <= 2000) {
+            throw new InsufficientBalanceException("Minimum Balance for placing bid should be greater than 2000");
+        }
+
+        if (byUserId== null) {
+           throw new UserNotFoundExceptions("User Not Found By Id "+ placedBidDTO.getUserId());
+        }
+        if (carbyId.isEmpty()){
             throw new UserNotFoundExceptions("Bid Cannot Be Placed as Car is Not Found in Our Database");
         }
-        PlacedBid placedBid = convertToEntity(placedBidDTO);
-        if(placedBid.getAmount()< byId.get().getBasePrice()){
+        BidCars bidCar = carbyId.get();
 
-            throw new BidAmountLessException();
+        if (bidCar.getUserId().equals(placedBidDTO.getUserId())) {
+            throw new BidForSelfAuctionException("You cannot place a bid on your own car");
+        }
+        PlacedBid placedBid = convertToEntity(placedBidDTO);
+        if(placedBid.getAmount()< carbyId.get().getBasePrice()){
+
+            throw new BidAmountLessException("Bid amount cannot be less than base price");
         }
 
           placedBid.setBidCarId(bidCarId);
