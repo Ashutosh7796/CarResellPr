@@ -4,7 +4,6 @@ import lombok.Data;
 
 import java.time.LocalDate;
 import java.time.LocalDateTime;
-import java.util.UUID;
 
 @Data
 public class BidDetailsDTO {
@@ -91,6 +90,6 @@ public class BidDetailsDTO {
 
     private int userId;
 
-    public void setBeadingCarId(UUID beadingCarId) {
+    public void setBeadingCarId(Integer beadingCarId) {
     }
 }

@@ -10,7 +10,7 @@ public interface BidCarsService {
 
     public BidCarsDTO createBidding(BidCarsDTO bidCarsDTO);
 
-    public BidDetailsDTO getbyBidId (Integer bidCarId,  UUID beadingCarId);
+    public BidDetailsDTO getbyBidId (Integer bidCarId,  Integer beadingCarId);
 
 
     public List<BidCarsDTO> getByUserId(Integer userId);

@@ -106,7 +106,7 @@ public class StartBidingController {
     }
 
     @GetMapping("/getById")
-     public ResponseEntity<?> getbiddingcar (@RequestParam Integer bidCarId,@RequestParam UUID beadingCarId) {
+     public ResponseEntity<?> getbiddingcar (@RequestParam Integer bidCarId,@RequestParam Integer beadingCarId) {
          BidDetailsDTO bidDetailsDTO = bidCarsService.getbyBidId(bidCarId, beadingCarId);
         return ResponseEntity.status(HttpStatus.OK).body(new ResDtos("Success", bidDetailsDTO));
      }

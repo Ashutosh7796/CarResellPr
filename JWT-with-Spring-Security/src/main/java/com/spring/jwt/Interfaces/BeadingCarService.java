@@ -8,11 +8,11 @@ import java.util.UUID;
 public interface BeadingCarService {
 
     public String AddBCar(BeadingCARDto beadingCARDto);
-    public String editCarDetails(BeadingCARDto beadingCARDto, UUID beadingCarId);
+    public String editCarDetails(BeadingCARDto beadingCARDto, Integer beadingCarId);
     public List<BeadingCARDto> getAllBeadingCars();
-    public String deleteBCar(UUID beadingCarId);
+    public String deleteBCar(Integer beadingCarId);
 
-   public BeadingCARDto getBCarById(UUID beadingCarId);
+   public BeadingCARDto getBCarById(Integer beadingCarId);
 
    public List<BeadingCARDto>getByUserId(int UserId);
 

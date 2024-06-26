@@ -9,7 +9,7 @@ import java.util.UUID;
 @Data
 public class BeadingCARDto {
 
-    private UUID beadingCarId;
+    private Integer beadingCarId;
 
 
     private Boolean acFeature;

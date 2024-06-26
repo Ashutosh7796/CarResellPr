@@ -18,7 +18,7 @@ public class BeadingCAR {
     @Id
     @GeneratedValue(strategy = GenerationType.IDENTITY)
     @Column(name = "beadingCarId", nullable = false)
-    private UUID beadingCarId;
+    private Integer beadingCarId;
 
     @Column(name = "ac_feature")
     private Boolean acFeature;

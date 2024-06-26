@@ -18,7 +18,7 @@ public class BidCars {
    private Integer bidCarId;
 
    @Column(name = "beadingCardId")
-   private UUID beadingCarId;
+   private Integer beadingCarId;
 
     @Column(nullable = false)
     private LocalDateTime createdAt;

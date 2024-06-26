@@ -29,7 +29,7 @@ public class BeadingCarServiceImpl implements BeadingCarService {
     }
 
     @Override
-    public String editCarDetails(BeadingCARDto beadingCARDto, UUID beadingCarId) {
+    public String editCarDetails(BeadingCARDto beadingCARDto, Integer beadingCarId) {
         BeadingCAR beadingCAR = beadingCarRepo.findById(beadingCarId).orElseThrow(()->new BeadingCarNotFoundException(("beadingCAR not found"), HttpStatus.NOT_FOUND));
         beadingCAR.setAcFeature(beadingCARDto.getAcFeature());
         beadingCAR.setMusicFeature(beadingCARDto.getMusicFeature());
@@ -72,13 +72,13 @@ public class BeadingCarServiceImpl implements BeadingCarService {
     }
 
     @Override
-    public String deleteBCar(UUID beadingCarId) {
+    public String deleteBCar(Integer beadingCarId) {
         beadingCarRepo.deleteById(beadingCarId);
         return "Beading car deleted successfully";
     }
 
     @Override
-    public BeadingCARDto getBCarById(UUID beadingCarId) {
+    public BeadingCARDto getBCarById(Integer beadingCarId) {
         BeadingCAR beadingCAR = beadingCarRepo.findById(beadingCarId)
                 .orElseThrow(() -> new BeadingCarNotFoundException("Beading car not found with id: " + beadingCarId, HttpStatus.NOT_FOUND));
         return new BeadingCARDto(beadingCAR);

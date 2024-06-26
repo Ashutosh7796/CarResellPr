@@ -13,7 +13,7 @@ public class BidCarsDTO {
 
     private Integer bidCarId;
 
-    private UUID beadingCarId;
+    private Integer beadingCarId;
 
     private LocalDateTime closingTime;
 
