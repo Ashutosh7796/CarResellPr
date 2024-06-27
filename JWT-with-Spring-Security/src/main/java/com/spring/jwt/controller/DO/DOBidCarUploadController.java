@@ -1,9 +1,11 @@
 package com.spring.jwt.controller.DO;
 
 import com.spring.jwt.Interfaces.IDocument;
+import com.spring.jwt.dto.BidCarDto;
 import com.spring.jwt.dto.DocumentDto;
 import com.spring.jwt.dto.ResponceDto;
 import com.spring.jwt.dto.ResponseDto;
+import com.spring.jwt.repository.IBidDoc;
 import com.spring.jwt.service.DOService;
 import lombok.RequiredArgsConstructor;
 import org.springframework.beans.factory.annotation.Value;
@@ -23,10 +25,10 @@ import java.util.HashMap;
 import java.util.Map;
 
 @RestController
-@RequestMapping("/uploadFile")
+@RequestMapping("/uploadFileBidCar")
 @RequiredArgsConstructor
-public class DOUploadController {
-    private final IDocument iDocument;
+public class DOBidCarUploadController {
+    private final IBidDoc iDocument;
     @Value("${do.CDN.No}")
     private String CDNNo;
     private final String uploadDir = "uploads";
@@ -38,7 +40,7 @@ public class DOUploadController {
 
 
     @PostMapping("/add")
-    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file, @RequestParam String documentType, @RequestParam Integer userId,@RequestParam Integer carId) throws InvalidKeyException, NoSuchAlgorithmException {
+    public ResponseEntity<?> uploadImage(@RequestParam("image") MultipartFile file, @RequestParam String documentType,@RequestParam Integer carId,@RequestParam String doc,@RequestParam String doctype,@RequestParam String subtype,@RequestParam String comment) throws InvalidKeyException, NoSuchAlgorithmException {
         try {
             String fileName = StringUtils.cleanPath(file.getOriginalFilename());
             Path filePath = Paths.get(uploadDir, fileName);
@@ -88,10 +90,15 @@ public class DOUploadController {
 //                JSONObject jsonArray = new JSONObject(documentJSONArray);
 
 //                System.out.println(jsonArray.toString());
-                DocumentDto documentDto = new DocumentDto();
-                documentDto.setUserId(userId);
-                documentDto.setCarId(carId);
+                BidCarDto documentDto = new BidCarDto();
+                documentDto.setComment(comment);
+                documentDto.setDoctype(doctype);
                 documentDto.setDocumentType(documentType);
+                documentDto.setSubtype(subtype);
+
+
+
+
 
                 documentDto.setDocumentLink(CDNNo + "/" + response.getBody());
                 serviceResponse = iDocument.addDocument(documentDto);
@@ -130,9 +137,9 @@ public class DOUploadController {
     }
 
     @GetMapping("/getDocuments")
-    private ResponseEntity<?> getDocumentByUserIdAndDocId(@RequestParam Integer userId, @RequestParam String DocumentType) {
+    private ResponseEntity<?> getDocumentByUserIdAndDocId(@RequestParam Integer carId, @RequestParam String DocumentType) {
         try {
-            Object documents = iDocument.getAllDocument(userId, DocumentType);
+            Object documents = iDocument.getAllDocument(carId, DocumentType);
             ResponceDto responceDto = new ResponceDto("success",documents);
             return ResponseEntity.status(HttpStatus.OK).body(responceDto);
         } catch (Exception e) {
@@ -144,9 +151,9 @@ public class DOUploadController {
     }
 
     @GetMapping("/getByUserId")
-    private ResponseEntity<?> getByUserId(@RequestParam Integer userId) {
+    private ResponseEntity<?> getByUserId(@RequestParam Integer carId) {
         try {
-            Object documents =iDocument.getByUserId(userId);
+            Object documents =iDocument.getByUserId(carId);
             ResponceDto responceDto = new ResponceDto("success",documents);
             return ResponseEntity.status(HttpStatus.OK).body(responceDto);
         } catch (Exception e) {
@@ -156,19 +163,7 @@ public class DOUploadController {
 
         }
     }
-    @DeleteMapping("/delete")
-    private ResponseEntity<?> deleteCar(@RequestParam Integer carId) {
-        try {
-            Object documents =iDocument.delete(carId);
 
-            return ResponseEntity.status(HttpStatus.OK).body(documents);
-        } catch (Exception e) {
-            System.err.println(e);
-
-            return ResponseEntity.status(HttpStatus.NOT_FOUND).body(new ResponceDto("unsuccess", String.valueOf(e)));
-
-        }
-    }
     @GetMapping("/getByCarID")
     private ResponseEntity<?> getByCarID(@RequestParam Integer carId) {
         try {

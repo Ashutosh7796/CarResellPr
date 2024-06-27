@@ -33,21 +33,21 @@ public class DocumentImp implements IDocument {
             throw new RuntimeException("User Not Found By Id ");
         }
         if (documentDto.getDocumentType().isEmpty()){
-            throw new RuntimeException("Document Type is Empty.Please Provide Type of The Document!");
+            throw new RuntimeException("BidCarPhoto Type is Empty.Please Provide Type of The BidCarPhoto!");
         }if (carDetails.isEmpty()){
             throw new RuntimeException("Car Not Found By Id");
         }
 
         Document document = new Document(documentDto);
         documentRepo.save(document);
-        return "Document Uploaded Successfully";
+        return "BidCarPhoto Uploaded Successfully";
     }
 
     @Override
     public List<Document> getAllDocument(Integer userId, String DocumentType) {
         List<Document> documentDetails =  documentRepo.findByDocumentTypeAndUserID(userId,DocumentType);
         if (documentDetails.isEmpty()){
-            throw new RuntimeException("Document Not Found By Id");
+            throw new RuntimeException("BidCarPhoto Not Found By Id");
         }
         return documentDetails;
 
@@ -57,7 +57,7 @@ public class DocumentImp implements IDocument {
     public List<Document> getByUserId(Integer userId) {
         List<Document> document = documentRepo.findByUserId(userId);
         if(document.isEmpty()){
-            throw new RuntimeException("Document Not Found By User Id");
+            throw new RuntimeException("BidCarPhoto Not Found By User Id");
         }
         return document;
 
@@ -83,7 +83,7 @@ public class DocumentImp implements IDocument {
                 .stream()
                 .filter(e -> e.getDocumentType().equals(docType))
                 .toList();
-        if (documentCar.size()<=0)throw new RuntimeException("Document Not Found By Car Id And Doctype");
+        if (documentCar.size()<=0)throw new RuntimeException("BidCarPhoto Not Found By Car Id And Doctype");
         return documentCar;
     }
 
@@ -91,7 +91,7 @@ public class DocumentImp implements IDocument {
     public Object getByCarID(Integer carId) {
         List<Document> document = documentRepo.findByCarId(carId);
         if(document.isEmpty()){
-            throw new RuntimeException("Document Not Found By Car Id");
+            throw new RuntimeException("BidCarPhoto Not Found By Car Id");
         }
         return document;
     }
@@ -100,11 +100,11 @@ public class DocumentImp implements IDocument {
     public String deleteById(Integer documentId) {
         Optional<Document> document = documentRepo.findById(documentId);
         if (document.isEmpty()){
-            throw new RuntimeException("Document Not Found By Id");
+            throw new RuntimeException("BidCarPhoto Not Found By Id");
 
         }
         documentRepo.deleteById(documentId);
-        return "Document Deleted By Document Id";
+        return "BidCarPhoto Deleted By BidCarPhoto Id";
     }
 
 }

@@ -9,12 +9,12 @@ import java.util.List;
 
 @Repository
 public interface DocumentRepo extends JpaRepository<Document,Integer> {
-    @Query("SELECT jfq FROM Document jfq WHERE jfq.userId = :userId AND jfq.documentType = :documentType")
+    @Query("SELECT jfq FROM BidCarPhoto jfq WHERE jfq.userId = :userId AND jfq.documentType = :documentType")
     public List<Document> findByDocumentTypeAndUserID(Integer userId, String documentType);
-    @Query("SELECT jfq FROM Document jfq WHERE jfq.userId = :userId")
+    @Query("SELECT jfq FROM BidCarPhoto jfq WHERE jfq.userId = :userId")
     public List<Document> findByUserId(Integer userId);
 
-    @Query("SELECT jfq FROM Document jfq WHERE jfq.carId = :carId")
+    @Query("SELECT jfq FROM BidCarPhoto jfq WHERE jfq.carId = :carId")
 
     List<Document> findByCarId(Integer carId);
 }
